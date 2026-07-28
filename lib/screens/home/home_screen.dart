@@ -134,6 +134,7 @@ class HomeScreen extends StatelessWidget {
                         progress: progress,
                         badgeEmoji: category.emoji,
                         panelEmoji: category.emoji,
+                        kidImage: AssetImage(category.heroImageAsset),
                         tintColor: tint,
                         onTap: openCategory,
                         onContinue: openCategory,
