@@ -725,16 +725,11 @@ class _SignBubble extends StatelessWidget {
         Container(
           width: size,
           height: size,
+          clipBehavior: Clip.antiAlias,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             color: item.backgroundColor ?? const Color(0xFFEAF0FF),
             border: Border.all(color: Colors.white, width: 2),
-            image: item.imageProvider != null
-                ? DecorationImage(
-                    image: item.imageProvider!,
-                    fit: BoxFit.cover,
-                  )
-                : null,
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withValues(alpha: 0.08),
@@ -743,14 +738,28 @@ class _SignBubble extends StatelessWidget {
               ),
             ],
           ),
-          child: item.imageProvider == null
-              ? Center(
+          child: item.imageProvider != null
+              ? Transform.scale(
+                  scale: 1.12,
+                  child: Image(
+                    image: item.imageProvider!,
+                    fit: BoxFit.cover,
+                    width: size,
+                    height: size,
+                    errorBuilder: (context, error, stackTrace) => Center(
+                      child: Text(
+                        item.emoji ?? '✨',
+                        style: TextStyle(fontSize: compact ? 16 : 18),
+                      ),
+                    ),
+                  ),
+                )
+              : Center(
                   child: Text(
                     item.emoji ?? '✨',
                     style: TextStyle(fontSize: compact ? 16 : 18),
                   ),
-                )
-              : null,
+                ),
         ),
         SizedBox(height: compact ? 4 : 5),
         Text(

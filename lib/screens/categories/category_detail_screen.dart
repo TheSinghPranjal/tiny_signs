@@ -190,10 +190,6 @@ class _SignsCard extends StatelessWidget {
 }
 
 /// Circular pink-bordered sign illustration + label.
-///
-/// Uses Expanded + AspectRatio for the circle instead of hand-computed
-/// pixel sizes, so it can never overflow its grid cell — the circle simply
-/// takes whatever height is left after the label, on any screen size.
 class _SignIllustrationTile extends StatelessWidget {
   const _SignIllustrationTile({
     required this.sign,
@@ -211,74 +207,96 @@ class _SignIllustrationTile extends StatelessWidget {
       onTap: onTap,
       behavior: HitTestBehavior.opaque,
       child: Column(
-        mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Expanded(
-            child: AspectRatio(
-              aspectRatio: 1,
-              child: Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  Positioned.fill(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                          color: CategoryDetailScreen._pinkBorder,
-                          width: 2.5,
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.05),
-                            blurRadius: 6,
-                            offset: const Offset(0, 2),
-                          ),
-                        ],
-                      ),
-                      padding: const EdgeInsets.all(2.5),
-                      child: ClipOval(
-                        child: Image.asset(
-                          sign.imageAsset,
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) {
-                            return LayoutBuilder(
-                              builder: (context, c) => ColoredBox(
-                                color: const Color(0xFFFDEEF3),
-                                child: Center(
-                                  child: Text(
-                                    sign.emoji,
-                                    style: TextStyle(
-                                        fontSize: c.maxWidth * 0.4),
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                // Never let AspectRatio overflow the cell — that was painting
+                // square image bottoms outside the circle.
+                final side = constraints.biggest.shortestSide;
+                return Center(
+                  child: SizedBox(
+                    width: side,
+                    height: side,
+                    child: Stack(
+                      clipBehavior: Clip.none,
+                      children: [
+                        // Circle border + clipped image
+                        Positioned.fill(
+                          child: DecoratedBox(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                color: CategoryDetailScreen._pinkBorder,
+                                width: 2.5,
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withValues(alpha: 0.05),
+                                  blurRadius: 6,
+                                  offset: const Offset(0, 2),
+                                ),
+                              ],
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(2.5),
+                              child: ClipOval(
+                                clipBehavior: Clip.antiAliasWithSaveLayer,
+                                child: Transform.scale(
+                                  // Assets are circular art on a black square —
+                                  // zoom past the black ring so only the art fills.
+                                  scale: 1.12,
+                                  child: Image.asset(
+                                    sign.mainImageAsset,
+                                    fit: BoxFit.cover,
+                                    width: side,
+                                    height: side,
+                                    alignment: Alignment.center,
+                                    errorBuilder:
+                                        (context, error, stackTrace) {
+                                      return ColoredBox(
+                                        color:
+                                            CategoryDetailScreen._imageCircle,
+                                        child: Center(
+                                          child: Text(
+                                            sign.emoji,
+                                            style: TextStyle(
+                                              fontSize: side * 0.4,
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    },
                                   ),
                                 ),
                               ),
-                            );
-                          },
+                            ),
+                          ),
                         ),
-                      ),
+                        if (isCompleted)
+                          Positioned(
+                            right: 0,
+                            top: 0,
+                            child: Container(
+                              width: 18,
+                              height: 18,
+                              decoration: const BoxDecoration(
+                                color: Color(0xFF98D4B0),
+                                shape: BoxShape.circle,
+                              ),
+                              child: const Icon(
+                                Icons.check_rounded,
+                                size: 12,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                      ],
                     ),
                   ),
-                  if (isCompleted)
-                    Positioned(
-                      right: -2,
-                      top: -2,
-                      child: Container(
-                        width: 18,
-                        height: 18,
-                        decoration: const BoxDecoration(
-                          color: Color(0xFF98D4B0),
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Icon(
-                          Icons.check_rounded,
-                          size: 12,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                ],
-              ),
+                );
+              },
             ),
           ),
           const SizedBox(height: 6),
