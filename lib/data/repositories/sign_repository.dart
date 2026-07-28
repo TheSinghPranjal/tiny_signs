@@ -7,6 +7,8 @@ abstract final class SignRepository {
       id: 'beginner',
       name: 'Beginner',
       emoji: '👶',
+      heroImage: 'assets/images/kid_bg.webp',
+      secondaryImage: '',
       description: 'Essential first signs every little one needs',
       gradientIndex: 0,
     ),
