@@ -7,6 +7,7 @@ import '../../core/theme/app_colors.dart';
 import '../../data/repositories/sign_repository.dart';
 import '../../providers/app_state.dart';
 import '../../widgets/animated_background.dart';
+import '../../widgets/floating_bottom_nav.dart';
 
 class AchievementsScreen extends StatelessWidget {
   const AchievementsScreen({super.key});
@@ -59,7 +60,7 @@ class AchievementsScreen extends StatelessWidget {
               ),
             ),
             SliverPadding(
-              padding: const EdgeInsets.fromLTRB(24, 8, 24, 100),
+              padding: const EdgeInsets.fromLTRB(24, 8, 24, kBottomNavClearance),
               sliver: SliverGrid(
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,

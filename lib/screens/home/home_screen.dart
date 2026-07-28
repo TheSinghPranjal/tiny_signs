@@ -9,6 +9,7 @@ import '../../providers/app_state.dart';
 import '../../widgets/animated_background.dart';
 import '../../widgets/category_card.dart';
 import '../../widgets/celebration_overlay.dart';
+import '../../widgets/floating_bottom_nav.dart';
 import '../../widgets/mascot_widget.dart';
 import '../categories/category_detail_screen.dart';
 import '../lesson/lesson_screen.dart';
@@ -95,7 +96,7 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
             SliverPadding(
-              padding: const EdgeInsets.fromLTRB(20, 16, 20, 100),
+              padding: const EdgeInsets.fromLTRB(20, 16, 20, kBottomNavClearance),
               sliver: SliverList(
                 delegate: SliverChildBuilderDelegate(
                   (context, index) {
