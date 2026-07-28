@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../../core/theme/app_colors.dart';
 import '../../providers/app_state.dart';
 import '../../widgets/animated_background.dart';
+import '../../widgets/floating_bottom_nav.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -18,7 +19,7 @@ class SettingsScreen extends StatelessWidget {
       isDark: isDark,
       child: SafeArea(
         child: ListView(
-          padding: const EdgeInsets.fromLTRB(24, 24, 24, 100),
+          padding: const EdgeInsets.fromLTRB(24, 24, 24, kBottomNavClearance),
           children: [
             Text(
               'Settings',
