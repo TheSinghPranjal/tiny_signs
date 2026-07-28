@@ -142,6 +142,8 @@ class HomeScreen extends StatelessWidget {
                             SignPreviewItem(
                               label: previewSigns[i].word,
                               emoji: previewSigns[i].emoji,
+                              imageProvider:
+                                  AssetImage(previewSigns[i].imageAsset),
                               backgroundColor:
                                   bubbleColors[i % bubbleColors.length]
                                       .withValues(alpha: 0.18),
