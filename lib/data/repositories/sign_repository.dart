@@ -26,13 +26,13 @@ abstract final class SignRepository {
       description: 'Signs for the people you love most',
       gradientIndex: 1,
     ),
-    // SignCategory(
-    //   id: 'feelings',
-    //   name: 'Feelings',
-    //   emoji: '❤️',
-    //   description: 'Express how you feel inside',
-    //   gradientIndex: 3,
-    // ),
+    SignCategory(
+      id: 'feelings',
+      name: 'Feelings',
+      emoji: '❤️',
+      description: 'Express how you feel inside',
+      gradientIndex: 3,
+    ),
     // SignCategory(
     //   id: 'daily_routine',
     //   name: 'Daily Routine',
@@ -269,8 +269,19 @@ abstract final class SignRepository {
       handGesture: HandGestureType.clap,
       mainImagePath: 'assets/signs/pray/step_1.webp',
     ),
-    _s('love', 'Love', '💕', 'beginner', 'Hugging a stuffed animal with a warm heart.',
-        'Cross arms over chest in a hug motion.', 'Love! Cross your arms over your heart.', HandGestureType.hugMotion),
+    const Sign(
+      id: 'love',
+      word: 'Love',
+      emoji: '💕',
+      categoryId: 'beginner',
+      illustrationDescription:
+          'Hugging a stuffed animal with a warm heart.',
+      signDescription:
+          'Cross arms over chest in a hug motion.',
+      narration: 'Love! Cross your arms over your heart.',
+      handGesture: HandGestureType.hugMotion,
+      mainImagePath: 'assets/signs/love/step_1.webp',
+    ),
     const Sign(
       id: 'hug',
       word: 'Hug',
@@ -284,12 +295,45 @@ abstract final class SignRepository {
       handGesture: HandGestureType.hugMotion,
       mainImagePath: 'assets/signs/hug/step_1.webp',
     ),
-    _s('up', 'Up', '⬆️', 'beginner', 'Reaching up high to catch floating bubbles!',
-        'Point index finger upward and lift.', 'Up! Point your finger to the sky.', HandGestureType.point),
-    _s('down', 'Down', '⬇️', 'beginner', 'Looking down at a cute puppy on the floor.',
-        'Point index finger downward.', 'Down! Point your finger to the ground.', HandGestureType.point),
-    _s('stop', 'Stop', '🛑', 'beginner', 'Holding up a hand before crossing the street.',
-        'Hold flat palm facing forward firmly.', 'Stop! Show your flat hand like a stop sign.', HandGestureType.flatHand),
+    const Sign(
+      id: 'up',
+      word: 'Up',
+      emoji: '⬆️',
+      categoryId: 'beginner',
+      illustrationDescription:
+          'Reaching up high to catch floating bubbles!',
+      signDescription:
+          'Point index finger upward and lift.',
+      narration: 'Up! Point your finger to the sky.',
+      handGesture: HandGestureType.point,
+      mainImagePath: 'assets/signs/up/step_1.webp',
+    ),
+    const Sign(
+      id: 'down',
+      word: 'Down',
+      emoji: '⬇️',
+      categoryId: 'beginner',
+      illustrationDescription:
+          'Looking down at a cute puppy on the floor.',
+      signDescription:
+          'Point index finger downward.',
+      narration: 'Down! Point your finger to the ground.',
+      handGesture: HandGestureType.point,
+      mainImagePath: 'assets/signs/down/step_1.webp',
+    ),
+    const Sign(
+      id: 'stop',
+      word: 'Stop',
+      emoji: '🛑',
+      categoryId: 'beginner',
+      illustrationDescription:
+          'Holding up a hand before crossing the street.',
+      signDescription:
+          'Hold flat palm facing forward firmly.',
+      narration: 'Stop! Show your flat hand like a stop sign.',
+      handGesture: HandGestureType.flatHand,
+      mainImagePath: 'assets/signs/stop/step_1.webp',
+    ),
     _s('go', 'Go', '🟢', 'beginner', 'Running to the playground with excitement!',
         'Wave both hands forward like shooing.', 'Go! Wave your hands forward — let\'s go!', HandGestureType.wave),
     _s('open', 'Open', '📂', 'beginner', 'Opening a treasure box full of surprises!',
@@ -332,12 +376,45 @@ abstract final class SignRepository {
   ];
 
   static final _family = [
-    _s('mom', 'Mom', '👩', 'family', 'Mommy giving the warmest goodnight kiss.',
-        'Tap thumb to chin twice.', 'Mom! Tap your thumb on your chin.', HandGestureType.touchChin),
-    _s('dad', 'Dad', '👨', 'family', 'Daddy lifting you up in the air!',
-        'Tap thumb to forehead twice.', 'Dad! Tap your thumb on your forehead.', HandGestureType.touchChin),
-    _s('brother', 'Brother', '👦', 'family', 'Playing blocks together with big brother.',
-        'Sign boy then sign together.', 'Brother! Tap forehead then clasp hands.', HandGestureType.clap),
+    const Sign(
+      id: 'mom',
+      word: 'Mom',
+      emoji: '👩',
+      categoryId: 'family',
+      illustrationDescription:
+          'Mommy giving the warmest goodnight kiss.',
+      signDescription:
+          'Tap thumb to chin twice.',
+      narration: 'Mom! Tap your thumb on your chin.',
+      handGesture: HandGestureType.touchChin,
+      mainImagePath: 'assets/signs/mom/step_1.webp',
+    ),
+    const Sign(
+      id: 'dad',
+      word: 'Dad',
+      emoji: '👨',
+      categoryId: 'family',
+      illustrationDescription:
+          'Daddy lifting you up in the air!',
+      signDescription:
+          'Tap thumb to forehead twice.',
+      narration: 'Dad! Tap your thumb on your forehead.',
+      handGesture: HandGestureType.touchChin,
+      mainImagePath: 'assets/signs/dad/step_1.webp',
+    ),
+    const Sign(
+      id: 'brother',
+      word: 'Brother',
+      emoji: '👦',
+      categoryId: 'family',
+      illustrationDescription:
+          'Playing blocks together with big brother.',
+      signDescription:
+          'Sign boy then sign together.',
+      narration: 'Brother! Tap forehead then clasp hands.',
+      handGesture: HandGestureType.clap,
+      mainImagePath: 'assets/signs/brother/step_1.webp',
+    ),
     _s('sister', 'Sister', '👧', 'family', 'Sharing toys with your sister.',
         'Sign girl then sign together.', 'Sister! Brush cheek then clasp hands.', HandGestureType.touchChin),
     _s('grandma', 'Grandma', '👵', 'family', 'Grandma baking cookies in the kitchen.',
@@ -361,8 +438,19 @@ abstract final class SignRepository {
         'Draw fingers down face like tears.', 'Sad! Draw your fingers down your face.', HandGestureType.wave),
     _s('angry', 'Angry', '😠', 'feelings', 'Crossing arms when things feel unfair.',
         'Claw hand pulls from stomach upward.', 'Angry! Pull your claw hand up from your tummy.', HandGestureType.clap),
-    _s('hurt', 'Hurt', '🤕', 'feelings', 'Pointing to a bumped knee with an owie.',
-        'Point index fingers together and twist.', 'Hurt! Point your fingers together and twist.', HandGestureType.pinch),
+    const Sign(
+      id: 'hurt',
+      word: 'Hurt',
+      emoji: '🤕',
+      categoryId: 'feelings',
+      illustrationDescription:
+          'Pointing to a bumped knee with an owie.',
+      signDescription:
+          'Point index fingers together and twist.',
+      narration: 'Hurt! Point your fingers together and twist.',
+      handGesture: HandGestureType.pinch,
+      mainImagePath: 'assets/signs/hurt/step_1.webp',
+    ),
     _s('sleepy', 'Sleepy', '😴', 'feelings', 'Yawning big before bedtime stories.',
         'Place flat hand on side of face, tilt head.', 'Sleepy! Rest your hand on your cheek and tilt.', HandGestureType.touchChin),
     _s('sick', 'Sick', '🤒', 'feelings', 'Resting on the couch with a cozy blanket.',
