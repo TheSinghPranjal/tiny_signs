@@ -61,7 +61,7 @@ class CategoryDetailScreen extends StatelessWidget {
                   description: category.description,
                   progress: progress,
                   accent: accent,
-                  kidImage: null, // e.g. AssetImage('assets/images/${category.id}_kid.png'),
+                  kidImage: AssetImage(category.heroImageAsset),
                 ),
               ),
               SliverPadding(
