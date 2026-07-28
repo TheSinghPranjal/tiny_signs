@@ -37,6 +37,13 @@ class CategoryDetailScreen extends StatelessWidget {
     final bgBottom = Color.lerp(_bgPinkBottom, tint.last, 0.25)!;
     final accent = Color.lerp(_pinkDark, tint.last, 0.3)!;
 
+    final width = MediaQuery.sizeOf(context).width;
+    final isCompact = width < 600;
+    final artSize = isCompact ? (width * 0.36).clamp(120.0, 160.0) : 210.0;
+    // Title row (~60) + art height + small bottom breathing room.
+    // Previously a fixed 310 left a large empty pink band under the kid.
+    final heroMaxHeight = isCompact ? (64 + artSize + 8) : (72 + artSize + 12);
+
     return Scaffold(
       backgroundColor: bgBottom,
       body: Container(
@@ -62,10 +69,12 @@ class CategoryDetailScreen extends StatelessWidget {
                   progress: progress,
                   accent: accent,
                   kidImage: AssetImage(category.heroImageAsset),
+                  maxHeight: heroMaxHeight,
+                  artSize: artSize,
                 ),
               ),
               SliverPadding(
-                padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 32),
                 sliver: SliverToBoxAdapter(
                   child: _SignsCard(
                     signs: signs,
@@ -302,6 +311,8 @@ class _HeroHeaderDelegate extends SliverPersistentHeaderDelegate {
     required this.description,
     required this.progress,
     required this.accent,
+    required this.maxHeight,
+    required this.artSize,
     this.kidImage,
   });
 
@@ -312,17 +323,18 @@ class _HeroHeaderDelegate extends SliverPersistentHeaderDelegate {
   final String description;
   final double progress;
   final Color accent;
+  final double maxHeight;
+  final double artSize;
   final ImageProvider? kidImage;
 
-  static const double _maxHeight = 310;
-  static const double _minHeight = 90;
+  static const double _minHeight = 88;
 
   static const Color _navy = CategoryDetailScreen._navy;
   static const Color _grayText = CategoryDetailScreen._grayText;
   static const Color _pinkTrack = CategoryDetailScreen._pinkTrack;
 
   @override
-  double get maxExtent => _maxHeight;
+  double get maxExtent => maxHeight;
 
   @override
   double get minExtent => _minHeight;
@@ -341,12 +353,9 @@ class _HeroHeaderDelegate extends SliverPersistentHeaderDelegate {
     final width = MediaQuery.sizeOf(context).width;
     final isCompact = width < 600;
 
-    // Kid image is always kept fully on-screen (no negative offsets), and
-    // the text column always reserves the image's full width + a margin —
-    // this is what previously caused the description to overlap the art.
-    final artSize = isCompact ? (width * 0.36).clamp(120.0, 165.0) : 220.0;
+    // Keep kid fully on-screen and reserve its width for the text column.
     final artRight = isCompact ? 8.0 : 16.0;
-    final textRightPad = artSize + artRight + 16;
+    final textRightPad = artSize + artRight + 12;
 
     return Material(
       color: Colors.transparent,
@@ -355,9 +364,10 @@ class _HeroHeaderDelegate extends SliverPersistentHeaderDelegate {
         child: Stack(
           clipBehavior: Clip.hardEdge,
           children: [
+            // Bottom-aligned so no empty pink band sits under the art.
             Positioned(
               right: artRight,
-              top: isCompact ? 44 : 52,
+              bottom: 4,
               child: Opacity(
                 opacity: fadeOpacity,
                 child: _KidImageArt(
@@ -369,26 +379,28 @@ class _HeroHeaderDelegate extends SliverPersistentHeaderDelegate {
             ),
             if (fadeOpacity > 0)
               Positioned(
-                top: isCompact ? 92 : 96,
+                top: isCompact ? 72 : 80,
                 left: 20,
                 right: textRightPad,
+                bottom: 12,
                 child: Opacity(
                   opacity: fadeOpacity,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
                         description,
-                        maxLines: 4,
+                        maxLines: isCompact ? 3 : 4,
                         overflow: TextOverflow.ellipsis,
                         style: GoogleFonts.fredoka(
-                          fontSize: isCompact ? 17 : 22,
+                          fontSize: isCompact ? 16 : 22,
                           fontWeight: FontWeight.w600,
                           color: _navy,
                           height: 1.3,
                         ),
                       ),
-                      SizedBox(height: isCompact ? 14 : 20),
+                      SizedBox(height: isCompact ? 12 : 16),
                       Row(
                         children: [
                           Expanded(
@@ -422,7 +434,7 @@ class _HeroHeaderDelegate extends SliverPersistentHeaderDelegate {
               left: 0,
               right: 0,
               child: Container(
-                padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+                padding: const EdgeInsets.fromLTRB(16, 4, 16, 4),
                 decoration: BoxDecoration(
                   color: t > 0.55
                       ? Color.lerp(
@@ -503,7 +515,9 @@ class _HeroHeaderDelegate extends SliverPersistentHeaderDelegate {
         oldDelegate.description != description ||
         oldDelegate.progress != progress ||
         oldDelegate.accent != accent ||
-        oldDelegate.kidImage != kidImage;
+        oldDelegate.kidImage != kidImage ||
+        oldDelegate.maxHeight != maxHeight ||
+        oldDelegate.artSize != artSize;
   }
 }
 
