@@ -198,7 +198,7 @@ abstract final class SignRepository {
           'Make a fist and nod it up and down like nodding yes.',
       narration: 'Yes means agree! Nod your fist up and down.',
       handGesture: HandGestureType.fistBump,
-      mainImagePath: 'assets/signs/yes/step_1.webp',
+      mainImagePath: 'assets/signs/yes.webp',
     ),
     const Sign(
       id: 'no',
@@ -211,7 +211,7 @@ abstract final class SignRepository {
           'Tap index and middle finger to thumb twice.',
       narration: 'No means not this time. Tap your fingers together.',
       handGesture: HandGestureType.pinch,
-      mainImagePath: 'assets/signs/no/step_1.webp',
+      mainImagePath: 'assets/signs/no.webp',
     ),
     const Sign(
       id: 'more',
@@ -224,7 +224,7 @@ abstract final class SignRepository {
           'Tap fingertips of both hands together repeatedly.',
       narration: 'More! Tap your fingertips together like you want more.',
       handGesture: HandGestureType.clap,
-      mainImagePath: 'assets/signs/more/step_1.webp',
+      mainImagePath: 'assets/signs/more.webp',
     ),
     const Sign(
       id: 'all_done',
@@ -237,7 +237,7 @@ abstract final class SignRepository {
           'Twist both hands palms out, like shaking off water.',
       narration: 'All done! Show your empty hands — we finished!',
       handGesture: HandGestureType.wave,
-      mainImagePath: 'assets/signs/all_done/step_1.webp',
+      mainImagePath: 'assets/signs/all_done.webp',
     ),
     const Sign(
       id: 'help',
@@ -250,7 +250,7 @@ abstract final class SignRepository {
           'Place one fist on flat palm and lift together.',
       narration: 'Help! Put your fist on your other hand and lift up.',
       handGesture: HandGestureType.flatHand,
-      mainImagePath: 'assets/signs/help/step_1.webp',
+      mainImagePath: 'assets/signs/help.webp',
     ),
     const Sign(
       id: 'please',
@@ -263,7 +263,7 @@ abstract final class SignRepository {
           'Rub flat hand in a circle on your chest.',
       narration: 'Please! Rub your hand on your chest in a circle.',
       handGesture: HandGestureType.rubBelly,
-      mainImagePath: 'assets/signs/please/step_1.webp',
+      mainImagePath: 'assets/signs/please.webp',
     ),
     const Sign(
       id: 'thank_you',
@@ -276,7 +276,7 @@ abstract final class SignRepository {
           'Place the fingertips of your dominant hand on your chin, then move your hand forward and slightly downward.',
       narration: 'Thank you! Touch your chin and move your hand forward.',
       handGesture: HandGestureType.touchChin,
-      mainImagePath: 'assets/signs/thank_you/step_1.webp',
+      mainImagePath: 'assets/signs/thank_you.webp',
     ),
     const Sign(
       id: 'pray',
@@ -289,7 +289,7 @@ abstract final class SignRepository {
           'Press palms together in front of your chest.',
       narration: 'Pray! Press your hands together in front of your heart.',
       handGesture: HandGestureType.clap,
-      mainImagePath: 'assets/signs/pray/step_1.webp',
+      mainImagePath: 'assets/signs/pray.webp',
     ),
     const Sign(
       id: 'love',
@@ -302,7 +302,7 @@ abstract final class SignRepository {
           'Cross arms over chest in a hug motion.',
       narration: 'Love! Cross your arms over your heart.',
       handGesture: HandGestureType.hugMotion,
-      mainImagePath: 'assets/signs/love/step_1.webp',
+      mainImagePath: 'assets/signs/love.webp',
     ),
     const Sign(
       id: 'hug',
@@ -315,7 +315,7 @@ abstract final class SignRepository {
           'Wrap arms around yourself like a big hug.',
       narration: 'Hug! Wrap your arms around yourself tight.',
       handGesture: HandGestureType.hugMotion,
-      mainImagePath: 'assets/signs/hug/step_1.webp',
+      mainImagePath: 'assets/signs/hug.webp',
     ),
     const Sign(
       id: 'up',
@@ -328,7 +328,7 @@ abstract final class SignRepository {
           'Point index finger upward and lift.',
       narration: 'Up! Point your finger to the sky.',
       handGesture: HandGestureType.point,
-      mainImagePath: 'assets/signs/up/step_1.webp',
+      mainImagePath: 'assets/signs/up.webp',
     ),
     const Sign(
       id: 'down',
@@ -341,7 +341,7 @@ abstract final class SignRepository {
           'Point index finger downward.',
       narration: 'Down! Point your finger to the ground.',
       handGesture: HandGestureType.point,
-      mainImagePath: 'assets/signs/down/step_1.webp',
+      mainImagePath: 'assets/signs/down.webp',
     ),
     const Sign(
       id: 'stop',
@@ -354,7 +354,7 @@ abstract final class SignRepository {
           'Hold flat palm facing forward firmly.',
       narration: 'Stop! Show your flat hand like a stop sign.',
       handGesture: HandGestureType.flatHand,
-      mainImagePath: 'assets/signs/stop/step_1.webp',
+      mainImagePath: 'assets/signs/stop.webp',
     ),
     _s('go', 'Go', '🟢', 'beginner', 'Running to the playground with excitement!',
         'Wave both hands forward like shooing.', 'Go! Wave your hands forward — let\'s go!', HandGestureType.wave),
@@ -378,7 +378,7 @@ abstract final class SignRepository {
           'Mime holding cup to mouth and tip head back.',
       narration: 'Drink! Pretend to hold a cup and sip.',
       handGesture: HandGestureType.drinkMotion,
-      mainImagePath: 'assets/signs/drink/step_1.webp',
+      mainImagePath: 'assets/signs/drink.webp',
     ),
     _s('water', 'Water', '💧', 'food', 'Splashing in a cool glass of water.',
         'Tap index finger to chin twice.', 'Water! Tap your chin with your finger.', HandGestureType.touchChin),
@@ -420,7 +420,7 @@ abstract final class SignRepository {
           'Tap thumb to chin twice.',
       narration: 'Mom! Tap your thumb on your chin.',
       handGesture: HandGestureType.touchChin,
-      mainImagePath: 'assets/signs/mom/step_1.webp',
+      mainImagePath: 'assets/signs/mom.webp',
     ),
     const Sign(
       id: 'dad',
@@ -433,7 +433,7 @@ abstract final class SignRepository {
           'Tap thumb to forehead twice.',
       narration: 'Dad! Tap your thumb on your forehead.',
       handGesture: HandGestureType.touchChin,
-      mainImagePath: 'assets/signs/dad/step_1.webp',
+      mainImagePath: 'assets/signs/dad.webp',
     ),
     const Sign(
       id: 'brother',
@@ -446,7 +446,7 @@ abstract final class SignRepository {
           'Sign boy then sign together.',
       narration: 'Brother! Tap forehead then clasp hands.',
       handGesture: HandGestureType.clap,
-      mainImagePath: 'assets/signs/brother/step_1.webp',
+      mainImagePath: 'assets/signs/brother.webp',
     ),
     const Sign(
       id: 'sister',
@@ -459,7 +459,7 @@ abstract final class SignRepository {
           'Sign girl then sign together.',
       narration: 'Sister! Brush cheek then clasp hands.',
       handGesture: HandGestureType.touchChin,
-      mainImagePath: 'assets/signs/sister/step_1.webp',
+      mainImagePath: 'assets/signs/sister.webp',
     ),
     _s('grandma', 'Grandma', '👵', 'family', 'Grandma baking cookies in the kitchen.',
         'Sign mother then bounce hand forward.', 'Grandma! Sign mom then bounce forward.', HandGestureType.wave),
@@ -487,7 +487,7 @@ abstract final class SignRepository {
           'Brush chest upward twice with flat hands.',
       narration: 'Happy! Brush up on your chest with both hands.',
       handGesture: HandGestureType.rubBelly,
-      mainImagePath: 'assets/signs/happy/step_1.webp',
+      mainImagePath: 'assets/signs/happy.webp',
     ),
     const Sign(
       id: 'sad',
@@ -500,7 +500,7 @@ abstract final class SignRepository {
           'Draw fingers down face like tears.',
       narration: 'Sad! Draw your fingers down your face.',
       handGesture: HandGestureType.wave,
-      mainImagePath: 'assets/signs/sad/step_1.webp',
+      mainImagePath: 'assets/signs/sad.webp',
     ),
     const Sign(
       id: 'angry',
@@ -513,7 +513,7 @@ abstract final class SignRepository {
           'Claw hand pulls from stomach upward.',
       narration: 'Angry! Pull your claw hand up from your tummy.',
       handGesture: HandGestureType.clap,
-      mainImagePath: 'assets/signs/angry/step_1.webp',
+      mainImagePath: 'assets/signs/angry.webp',
     ),
     const Sign(
       id: 'hurt',
@@ -526,7 +526,7 @@ abstract final class SignRepository {
           'Point index fingers together and twist.',
       narration: 'Hurt! Point your fingers together and twist.',
       handGesture: HandGestureType.pinch,
-      mainImagePath: 'assets/signs/hurt/step_1.webp',
+      mainImagePath: 'assets/signs/hurt.webp',
     ),
     _s('sleepy', 'Sleepy', '😴', 'feelings', 'Yawning big before bedtime stories.',
         'Place flat hand on side of face, tilt head.', 'Sleepy! Rest your hand on your cheek and tilt.', HandGestureType.touchChin),
@@ -541,7 +541,7 @@ abstract final class SignRepository {
           'Place middle fingers on forehead and stomach.',
       narration: 'Sick! Touch your forehead and tummy.',
       handGesture: HandGestureType.touchChin,
-      mainImagePath: 'assets/signs/sick/step_1.webp',
+      mainImagePath: 'assets/signs/sick.webp',
     ),
     const Sign(
       id: 'scared',
@@ -554,7 +554,7 @@ abstract final class SignRepository {
           'Shake hands in front of chest quickly.',
       narration: 'Scared! Shake your hands in front of you.',
       handGesture: HandGestureType.wave,
-      mainImagePath: 'assets/signs/scared/step_1.webp',
+      mainImagePath: 'assets/signs/scared.webp',
     ),
     const Sign(
       id: 'excited',
@@ -567,7 +567,7 @@ abstract final class SignRepository {
           'Shake both hands up and down alternately.',
       narration: 'Excited! Shake your hands up and down!',
       handGesture: HandGestureType.wave,
-      mainImagePath: 'assets/signs/excited/step_1.webp',
+      mainImagePath: 'assets/signs/excited.webp',
     ),
     const Sign(
       id: 'surprised',
@@ -580,7 +580,7 @@ abstract final class SignRepository {
           'Place flat hands on cheeks and open mouth.',
       narration: 'Surprised! Put hands on your cheeks!',
       handGesture: HandGestureType.openClose,
-      mainImagePath: 'assets/signs/surprised/step_1.webp',
+      mainImagePath: 'assets/signs/surprised.webp',
     ),
     const Sign(
       id: 'calm',
@@ -593,7 +593,7 @@ abstract final class SignRepository {
           'Place flat hands palms down and lower slowly.',
       narration: 'Calm! Lower your flat hands slowly.',
       handGesture: HandGestureType.flatHand,
-      mainImagePath: 'assets/signs/calm/step_1.webp',
+      mainImagePath: 'assets/signs/calm.webp',
     ),
   ];
 
@@ -636,7 +636,7 @@ abstract final class SignRepository {
           'Wipe forehead like sweating.',
       narration: 'Hot! Wipe your forehead — it\'s hot!',
       handGesture: HandGestureType.rubBelly,
-      mainImagePath: 'assets/signs/hot/step_1.webp',
+      mainImagePath: 'assets/signs/hot.webp',
     ),
     const Sign(
       id: 'cold',
@@ -649,7 +649,7 @@ abstract final class SignRepository {
           'Shake arms like shivering.',
       narration: 'Cold! Shake your arms — brrr!',
       handGesture: HandGestureType.wave,
-      mainImagePath: 'assets/signs/cold/step_1.webp',
+      mainImagePath: 'assets/signs/cold.webp',
     ),
     const Sign(
       id: 'rain',
@@ -662,7 +662,7 @@ abstract final class SignRepository {
           'Wiggle fingers downward like rain falling.',
       narration: 'Rain! Wiggle your fingers down like raindrops.',
       handGesture: HandGestureType.wave,
-      mainImagePath: 'assets/signs/rain/step_1.webp',
+      mainImagePath: 'assets/signs/rain.webp',
     ),
     _s('snow', 'Snow', '❄️', 'weather', 'Catching snowflakes on your tongue!',
         'Wiggle fingers downward while drifting side to side.', 'Snow! Wiggle fingers down and drift side to side.', HandGestureType.wave),
