@@ -213,10 +213,32 @@ abstract final class SignRepository {
       handGesture: HandGestureType.pinch,
       mainImagePath: 'assets/signs/no/step_1.webp',
     ),
-    _s('more', 'More', '➕', 'beginner', 'A toddler asking for more yummy snacks!',
-        'Tap fingertips of both hands together repeatedly.', 'More! Tap your fingertips together like you want more.', HandGestureType.clap),
-    _s('all_done', 'All Done', '✔️', 'beginner', 'Waving goodbye to empty plates after a meal.',
-        'Twist both hands palms out, like shaking off water.', 'All done! Show your empty hands — we finished!', HandGestureType.wave),
+    const Sign(
+      id: 'more',
+      word: 'More',
+      emoji: '➕',
+      categoryId: 'beginner',
+      illustrationDescription:
+          'A toddler asking for more yummy snacks!',
+      signDescription:
+          'Tap fingertips of both hands together repeatedly.',
+      narration: 'More! Tap your fingertips together like you want more.',
+      handGesture: HandGestureType.clap,
+      mainImagePath: 'assets/signs/more/step_1.webp',
+    ),
+    const Sign(
+      id: 'all_done',
+      word: 'All Done',
+      emoji: '✔️',
+      categoryId: 'beginner',
+      illustrationDescription:
+          'Waving goodbye to empty plates after a meal.',
+      signDescription:
+          'Twist both hands palms out, like shaking off water.',
+      narration: 'All done! Show your empty hands — we finished!',
+      handGesture: HandGestureType.wave,
+      mainImagePath: 'assets/signs/all_done/step_1.webp',
+    ),
     const Sign(
       id: 'help',
       word: 'Help',
@@ -345,8 +367,19 @@ abstract final class SignRepository {
   static final _food = [
     _s('eat', 'Eat', '🍽️', 'food', 'Enjoying a delicious bowl of cereal!',
         'Pinch fingers to mouth repeatedly.', 'Eat! Pinch food and bring it to your mouth.', HandGestureType.eatMotion),
-    _s('drink', 'Drink', '🥤', 'food', 'Sipping juice through a colorful straw.',
-        'Mime holding cup to mouth and tip head back.', 'Drink! Pretend to hold a cup and sip.', HandGestureType.drinkMotion),
+    const Sign(
+      id: 'drink',
+      word: 'Drink',
+      emoji: '🥤',
+      categoryId: 'food',
+      illustrationDescription:
+          'Sipping juice through a colorful straw.',
+      signDescription:
+          'Mime holding cup to mouth and tip head back.',
+      narration: 'Drink! Pretend to hold a cup and sip.',
+      handGesture: HandGestureType.drinkMotion,
+      mainImagePath: 'assets/signs/drink/step_1.webp',
+    ),
     _s('water', 'Water', '💧', 'food', 'Splashing in a cool glass of water.',
         'Tap index finger to chin twice.', 'Water! Tap your chin with your finger.', HandGestureType.touchChin),
     _s('milk', 'Milk', '🥛', 'food', 'Pouring milk into a sippy cup.',
@@ -486,8 +519,19 @@ abstract final class SignRepository {
     ),
     _s('sleepy', 'Sleepy', '😴', 'feelings', 'Yawning big before bedtime stories.',
         'Place flat hand on side of face, tilt head.', 'Sleepy! Rest your hand on your cheek and tilt.', HandGestureType.touchChin),
-    _s('sick', 'Sick', '🤒', 'feelings', 'Resting on the couch with a cozy blanket.',
-        'Place middle fingers on forehead and stomach.', 'Sick! Touch your forehead and tummy.', HandGestureType.touchChin),
+    const Sign(
+      id: 'sick',
+      word: 'Sick',
+      emoji: '🤒',
+      categoryId: 'feelings',
+      illustrationDescription:
+          'Resting on the couch with a cozy blanket.',
+      signDescription:
+          'Place middle fingers on forehead and stomach.',
+      narration: 'Sick! Touch your forehead and tummy.',
+      handGesture: HandGestureType.touchChin,
+      mainImagePath: 'assets/signs/sick/step_1.webp',
+    ),
     const Sign(
       id: 'scared',
       word: 'Scared',
