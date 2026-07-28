@@ -9,9 +9,12 @@ import '../../data/models/sign.dart';
 import '../../data/repositories/sign_repository.dart';
 import '../../providers/app_state.dart';
 import '../../widgets/celebration_overlay.dart';
-import '../../widgets/hand_sign_animation.dart';
-import 'practice_quiz_screen.dart';
+import '../../widgets/sign_steps_view.dart';
 
+/// Lesson flow:
+/// 1. Word reveal
+/// 2. Sign steps (hero + numbered 2/3-step circles + instruction card)
+/// 3. Practice ("I Did It!")
 class LessonScreen extends StatefulWidget {
   const LessonScreen({super.key, required this.signId});
 
@@ -28,8 +31,7 @@ class _LessonScreenState extends State<LessonScreen> {
 
   static const _steps = [
     LessonStep.word,
-    LessonStep.illustration,
-    LessonStep.animation,
+    LessonStep.signSteps,
     LessonStep.practice,
   ];
 
@@ -44,13 +46,13 @@ class _LessonScreenState extends State<LessonScreen> {
   void _nextStep() {
     if (_stepIndex < _steps.length - 1) {
       setState(() => _stepIndex++);
-      _speakEncouragement();
+      _hapticTick();
     } else {
       _completeLesson();
     }
   }
 
-  void _speakEncouragement() {
+  void _hapticTick() {
     final appState = context.read<AppState>();
     if (appState.vibrationEnabled) {
       HapticFeedback.lightImpact();
@@ -94,7 +96,7 @@ class _LessonScreenState extends State<LessonScreen> {
     final isDark = appState.darkMode;
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.nightBottom : AppColors.skyBottom,
+      backgroundColor: isDark ? AppColors.nightBottom : Colors.white,
       body: Stack(
         children: [
           SafeArea(
@@ -121,20 +123,12 @@ class _LessonScreenState extends State<LessonScreen> {
                         ),
                       );
                     },
-                    child: _buildStepContent(step, appState),
+                    child: _buildStepContent(step),
                   ),
                 ),
                 _LessonFooter(
                   step: step,
-                  onListen: () => _speakEncouragement(),
                   onNext: _nextStep,
-                  onPracticeComplete: () {
-                    Navigator.of(context).pushReplacement(
-                      StorybookPageRoute(
-                        page: PracticeQuizScreen(signId: widget.signId),
-                      ),
-                    );
-                  },
                 ),
               ],
             ),
@@ -161,18 +155,12 @@ class _LessonScreenState extends State<LessonScreen> {
     );
   }
 
-  Widget _buildStepContent(LessonStep step, AppState appState) {
+  Widget _buildStepContent(LessonStep step) {
     switch (step) {
       case LessonStep.word:
         return _WordSection(sign: _sign, key: const ValueKey('word'));
-      case LessonStep.illustration:
-        return _IllustrationSection(sign: _sign, key: const ValueKey('illus'));
-      case LessonStep.animation:
-        return _AnimationSection(
-          sign: _sign,
-          leftHanded: appState.leftHandedMode,
-          key: const ValueKey('anim'),
-        );
+      case LessonStep.signSteps:
+        return _SignStepsSection(sign: _sign, key: const ValueKey('steps'));
       case LessonStep.practice:
         return _PracticeSection(sign: _sign, key: const ValueKey('practice'));
     }
@@ -256,64 +244,12 @@ class _WordSection extends StatelessWidget {
                 curve: Curves.elasticOut,
               ),
           const SizedBox(height: 24),
-          Text(
-            sign.narration,
-            textAlign: TextAlign.center,
-            style: GoogleFonts.nunito(fontSize: 18),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _IllustrationSection extends StatelessWidget {
-  const _IllustrationSection({super.key, required this.sign});
-
-  final Sign sign;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(24),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            width: double.infinity,
-            height: 280,
-            decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                colors: [Color(0xFFD4EDFF), Color(0xFFE8F4FD)],
-              ),
-              borderRadius: BorderRadius.circular(32),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.08),
-                  blurRadius: 20,
-                  offset: const Offset(0, 8),
-                ),
-              ],
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(sign.emoji, style: const TextStyle(fontSize: 100))
-                    .animate(onPlay: (c) => c.repeat(reverse: true))
-                    .moveY(begin: 0, end: -8, duration: 1200.ms),
-                const SizedBox(height: 16),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24),
-                  child: Text(
-                    sign.illustrationDescription,
-                    textAlign: TextAlign.center,
-                    style: GoogleFonts.nunito(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-              ],
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 32),
+            child: Text(
+              sign.narration,
+              textAlign: TextAlign.center,
+              style: GoogleFonts.nunito(fontSize: 18),
             ),
           ),
         ],
@@ -322,63 +258,28 @@ class _IllustrationSection extends StatelessWidget {
   }
 }
 
-class _AnimationSection extends StatelessWidget {
-  const _AnimationSection({
-    super.key,
-    required this.sign,
-    required this.leftHanded,
-  });
+/// Hero circle + numbered steps (2 by default, 3 when stepThree is set)
+/// + instruction tip card.
+class _SignStepsSection extends StatelessWidget {
+  const _SignStepsSection({super.key, required this.sign});
 
   final Sign sign;
-  final bool leftHanded;
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(24),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            'Watch the sign',
-            style: GoogleFonts.fredoka(fontSize: 24, fontWeight: FontWeight.w600),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            sign.signDescription,
-            textAlign: TextAlign.center,
-            style: GoogleFonts.nunito(fontSize: 16),
-          ),
-          const SizedBox(height: 32),
-          Container(
-            padding: const EdgeInsets.all(32),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(32),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.06),
-                  blurRadius: 16,
-                  offset: const Offset(0, 6),
-                ),
-              ],
-            ),
-            child: HandSignAnimation(
-              gestureType: sign.handGesture,
-              size: 180,
-              leftHanded: leftHanded,
-            ),
-          ),
-          const SizedBox(height: 16),
-          Text(
-            '👐 Animated Hand',
-            style: GoogleFonts.nunito(
-              color: AppColors.textSecondary,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ],
-      ),
+    final mainImage = AssetImage(sign.mainImageAsset);
+    final additionalImages = <ImageProvider>[
+      AssetImage(sign.stepTwoImageAsset),
+      if (sign.stepThreeImageAsset != null)
+        AssetImage(sign.stepThreeImageAsset!),
+    ];
+
+    return SignStepsView(
+      title: sign.word,
+      subtitle: sign.subtitleLabel,
+      mainImage: mainImage,
+      additionalStepImages: additionalImages,
+      instruction: sign.instructionText,
     );
   }
 }
@@ -397,7 +298,8 @@ class _PracticeSection extends StatelessWidget {
         children: [
           Text(
             'Your turn!',
-            style: GoogleFonts.fredoka(fontSize: 28, fontWeight: FontWeight.w700),
+            style:
+                GoogleFonts.fredoka(fontSize: 28, fontWeight: FontWeight.w700),
           ),
           const SizedBox(height: 12),
           Text(
@@ -415,7 +317,16 @@ class _PracticeSection extends StatelessWidget {
             ),
             child: Column(
               children: [
-                Text(sign.emoji, style: const TextStyle(fontSize: 72)),
+                ClipOval(
+                  child: Image.asset(
+                    sign.mainImageAsset,
+                    width: 120,
+                    height: 120,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) =>
+                        Text(sign.emoji, style: const TextStyle(fontSize: 72)),
+                  ),
+                ),
                 const SizedBox(height: 16),
                 Text(
                   'Watch, imitate, then tap "I Did It!"',
@@ -431,18 +342,15 @@ class _PracticeSection extends StatelessWidget {
   }
 }
 
+/// Primary action only — Listen / Replay removed.
 class _LessonFooter extends StatelessWidget {
   const _LessonFooter({
     required this.step,
-    required this.onListen,
     required this.onNext,
-    required this.onPracticeComplete,
   });
 
   final LessonStep step;
-  final VoidCallback onListen;
   final VoidCallback onNext;
-  final VoidCallback onPracticeComplete;
 
   @override
   Widget build(BuildContext context) {
@@ -450,66 +358,28 @@ class _LessonFooter extends StatelessWidget {
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(24, 8, 24, 24),
-      child: Column(
-        children: [
-          Row(
-            children: [
-              Expanded(
-                child: OutlinedButton.icon(
-                  onPressed: onListen,
-                  icon: const Icon(Icons.volume_up_rounded),
-                  label: const Text('Listen'),
-                  style: OutlinedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: OutlinedButton.icon(
-                  onPressed: onListen,
-                  icon: const Icon(Icons.replay_rounded),
-                  label: const Text('Replay'),
-                  style: OutlinedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed: isPractice ? onNext : onNext,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: isPractice
-                    ? const Color(0xFF98D4B0)
-                    : const Color(0xFF7B8CDE),
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(vertical: 18),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    isPractice ? '⭐ I Did It!' : 'Next ➡',
-                    style: GoogleFonts.fredoka(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                ],
-              ),
+      child: SizedBox(
+        width: double.infinity,
+        child: ElevatedButton(
+          onPressed: onNext,
+          style: ElevatedButton.styleFrom(
+            backgroundColor: isPractice
+                ? const Color(0xFF98D4B0)
+                : const Color(0xFF7B8CDE),
+            foregroundColor: Colors.white,
+            padding: const EdgeInsets.symmetric(vertical: 18),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
             ),
           ),
-        ],
+          child: Text(
+            isPractice ? '⭐ I Did It!' : 'Next ➡',
+            style: GoogleFonts.fredoka(
+              fontSize: 20,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+        ),
       ),
     );
   }

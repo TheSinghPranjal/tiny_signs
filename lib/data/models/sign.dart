@@ -8,6 +8,11 @@ class Sign {
     required this.signDescription,
     required this.narration,
     this.handGesture = HandGestureType.openClose,
+    this.mainImagePath,
+    this.stepTwoImagePath,
+    this.stepThreeImagePath,
+    this.instructionOverride,
+    this.subtitleLabel = 'Sign Language',
   });
 
   final String id;
@@ -19,8 +24,30 @@ class Sign {
   final String narration;
   final HandGestureType handGesture;
 
-  /// Placeholder illustration asset for this sign, e.g. assets/signs/yes.webp
+  /// Optional overrides. When null, falls back to [imageAsset].
+  final String? mainImagePath;
+  final String? stepTwoImagePath;
+
+  /// When null, the lesson uses a 2-step layout. Set a path for 3 steps.
+  final String? stepThreeImagePath;
+
+  final String? instructionOverride;
+  final String subtitleLabel;
+
+  /// Shared category-detail / preview illustration.
   String get imageAsset => 'assets/signs/$id.webp';
+
+  /// Large hero circle + step 1 circle.
+  String get mainImageAsset => mainImagePath ?? imageAsset;
+
+  /// Step 2 circle (defaults to the same placeholder until unique art exists).
+  String get stepTwoImageAsset => stepTwoImagePath ?? imageAsset;
+
+  /// Optional step 3 — null means a 2-step screen.
+  String? get stepThreeImageAsset => stepThreeImagePath;
+
+  /// Tip card copy under the step circles.
+  String get instructionText => instructionOverride ?? signDescription;
 }
 
 enum HandGestureType {
@@ -42,4 +69,4 @@ enum HandGestureType {
   eatMotion,
 }
 
-enum LessonStep { word, illustration, animation, practice }
+enum LessonStep { word, signSteps, practice }
