@@ -3,9 +3,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import '../../core/theme/app_colors.dart';
+import '../../data/models/sign.dart';
 import '../../data/repositories/sign_repository.dart';
 import '../../providers/app_state.dart';
-import '../../widgets/category_card.dart';
 import '../../widgets/celebration_overlay.dart';
 import '../lesson/lesson_screen.dart';
 
@@ -14,58 +14,472 @@ class CategoryDetailScreen extends StatelessWidget {
 
   final String categoryId;
 
+  // ---- Colors matched to the reference design ------------------------------
+  static const Color _bgPinkTop = Color(0xFFFDEEF3);
+  static const Color _bgPinkBottom = Color(0xFFFBE0EA);
+  static const Color _navy = Color(0xFF1B1B3A);
+  static const Color _grayText = Color(0xFF8D8FA3);
+  static const Color _pinkDark = Color(0xFFE3728F);
+  static const Color _pinkTrack = Color(0xFFF6D6E0);
+  static const Color _pinkBorder = Color(0xFFF6D6E0);
+  static const Color _imageCircle = Color(0xFFF3C9D8);
+
   @override
   Widget build(BuildContext context) {
     final category = SignRepository.categoryById(categoryId)!;
     final signs = SignRepository.signsForCategory(categoryId);
     final appState = context.watch<AppState>();
-    final gradient = AppColors.categoryGradients[
+    final completed = appState.completedCountForCategory(categoryId);
+    final progress = signs.isEmpty ? 0.0 : completed / signs.length;
+    final tint = AppColors.categoryGradients[
         category.gradientIndex % AppColors.categoryGradients.length];
+    final bgTop = Color.lerp(_bgPinkTop, tint.first, 0.35)!;
+    final bgBottom = Color.lerp(_bgPinkBottom, tint.last, 0.25)!;
+    final accent = Color.lerp(_pinkDark, tint.last, 0.3)!;
 
     return Scaffold(
+      backgroundColor: bgBottom,
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [
-              gradient.first,
-              gradient.last.withValues(alpha: 0.3),
-            ],
+            colors: [bgTop, bgBottom],
           ),
         ),
         child: SafeArea(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          bottom: false,
+          child: CustomScrollView(
+            slivers: [
+              SliverPersistentHeader(
+                pinned: true,
+                delegate: _HeroHeaderDelegate(
+                  categoryEmoji: category.emoji,
+                  categoryName: category.name,
+                  completed: completed,
+                  total: signs.length,
+                  description: category.description,
+                  progress: progress,
+                  accent: accent,
+                  kidImage: null, // e.g. AssetImage('assets/images/${category.id}_kid.png'),
+                ),
+              ),
+              SliverPadding(
+                padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
+                sliver: SliverToBoxAdapter(
+                  child: _SignsCard(
+                    signs: signs,
+                    accent: accent,
+                    completedIds: appState.completedSigns,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// White rounded card with all sign illustrations in a shared grid.
+class _SignsCard extends StatelessWidget {
+  const _SignsCard({
+    required this.signs,
+    required this.accent,
+    required this.completedIds,
+  });
+
+  final List<Sign> signs;
+  final Color accent;
+  final Set<String> completedIds;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.fromLTRB(18, 20, 18, 22),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(28),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.06),
+            blurRadius: 18,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
             children: [
-              Padding(
-                padding: const EdgeInsets.all(16),
+              Expanded(
+                child: Text(
+                  "You'll learn these signs",
+                  style: GoogleFonts.fredoka(
+                    fontSize: 17,
+                    fontWeight: FontWeight.w700,
+                    color: CategoryDetailScreen._navy,
+                  ),
+                ),
+              ),
+              Container(
+                width: 32,
+                height: 32,
+                decoration: BoxDecoration(
+                  color: accent.withValues(alpha: 0.12),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  Icons.arrow_forward_rounded,
+                  size: 16,
+                  color: accent,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 18),
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final crossAxisCount = constraints.maxWidth >= 700 ? 6 : 4;
+              // The circle+label vertical fit is now handled inside
+              // _SignIllustrationTile via Expanded, so this ratio is just a
+              // sensible starting point — it can no longer overflow.
+              return GridView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: crossAxisCount,
+                  mainAxisSpacing: 18,
+                  crossAxisSpacing: 10,
+                  childAspectRatio: 0.72,
+                ),
+                itemCount: signs.length,
+                itemBuilder: (context, index) {
+                  final sign = signs[index];
+                  return _SignIllustrationTile(
+                    sign: sign,
+                    isCompleted: completedIds.contains(sign.id),
+                    onTap: () {
+                      Navigator.of(context).push(
+                        StorybookPageRoute(
+                          page: LessonScreen(signId: sign.id),
+                        ),
+                      );
+                    },
+                  );
+                },
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Circular pink-bordered sign illustration + label.
+///
+/// Uses Expanded + AspectRatio for the circle instead of hand-computed
+/// pixel sizes, so it can never overflow its grid cell — the circle simply
+/// takes whatever height is left after the label, on any screen size.
+class _SignIllustrationTile extends StatelessWidget {
+  const _SignIllustrationTile({
+    required this.sign,
+    required this.isCompleted,
+    required this.onTap,
+  });
+
+  final Sign sign;
+  final bool isCompleted;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      behavior: HitTestBehavior.opaque,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Expanded(
+            child: AspectRatio(
+              aspectRatio: 1,
+              child: Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  Positioned.fill(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: CategoryDetailScreen._pinkBorder,
+                          width: 2.5,
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.05),
+                            blurRadius: 6,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      padding: const EdgeInsets.all(2.5),
+                      child: ClipOval(
+                        child: Image.asset(
+                          sign.imageAsset,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return LayoutBuilder(
+                              builder: (context, c) => ColoredBox(
+                                color: const Color(0xFFFDEEF3),
+                                child: Center(
+                                  child: Text(
+                                    sign.emoji,
+                                    style: TextStyle(
+                                        fontSize: c.maxWidth * 0.4),
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                  ),
+                  if (isCompleted)
+                    Positioned(
+                      right: -2,
+                      top: -2,
+                      child: Container(
+                        width: 18,
+                        height: 18,
+                        decoration: const BoxDecoration(
+                          color: Color(0xFF98D4B0),
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(
+                          Icons.check_rounded,
+                          size: 12,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            sign.word,
+            textAlign: TextAlign.center,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: GoogleFonts.nunito(
+              fontSize: 12,
+              fontWeight: FontWeight.w700,
+              color: CategoryDetailScreen._navy,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Collapsing hero header
+// -----------------------------------------------------------------------------
+class _HeroHeaderDelegate extends SliverPersistentHeaderDelegate {
+  _HeroHeaderDelegate({
+    required this.categoryEmoji,
+    required this.categoryName,
+    required this.completed,
+    required this.total,
+    required this.description,
+    required this.progress,
+    required this.accent,
+    this.kidImage,
+  });
+
+  final String categoryEmoji;
+  final String categoryName;
+  final int completed;
+  final int total;
+  final String description;
+  final double progress;
+  final Color accent;
+  final ImageProvider? kidImage;
+
+  static const double _maxHeight = 310;
+  static const double _minHeight = 90;
+
+  static const Color _navy = CategoryDetailScreen._navy;
+  static const Color _grayText = CategoryDetailScreen._grayText;
+  static const Color _pinkTrack = CategoryDetailScreen._pinkTrack;
+
+  @override
+  double get maxExtent => _maxHeight;
+
+  @override
+  double get minExtent => _minHeight;
+
+  @override
+  Widget build(
+    BuildContext context,
+    double shrinkOffset,
+    bool overlapsContent,
+  ) {
+    final height = (maxExtent - shrinkOffset).clamp(minExtent, maxExtent);
+    final range = maxExtent - minExtent;
+    final t = range <= 0 ? 1.0 : (shrinkOffset / range).clamp(0.0, 1.0);
+    final fadeOpacity = (1 - t * 1.35).clamp(0.0, 1.0);
+
+    final width = MediaQuery.sizeOf(context).width;
+    final isCompact = width < 600;
+
+    // Kid image is always kept fully on-screen (no negative offsets), and
+    // the text column always reserves the image's full width + a margin —
+    // this is what previously caused the description to overlap the art.
+    final artSize = isCompact ? (width * 0.36).clamp(120.0, 165.0) : 220.0;
+    final artRight = isCompact ? 8.0 : 16.0;
+    final textRightPad = artSize + artRight + 16;
+
+    return Material(
+      color: Colors.transparent,
+      child: SizedBox(
+        height: height,
+        child: Stack(
+          clipBehavior: Clip.hardEdge,
+          children: [
+            Positioned(
+              right: artRight,
+              top: isCompact ? 44 : 52,
+              child: Opacity(
+                opacity: fadeOpacity,
+                child: _KidImageArt(
+                  kidImage: kidImage,
+                  emoji: categoryEmoji,
+                  size: artSize,
+                ),
+              ),
+            ),
+            if (fadeOpacity > 0)
+              Positioned(
+                top: isCompact ? 92 : 96,
+                left: 20,
+                right: textRightPad,
+                child: Opacity(
+                  opacity: fadeOpacity,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        description,
+                        maxLines: 4,
+                        overflow: TextOverflow.ellipsis,
+                        style: GoogleFonts.fredoka(
+                          fontSize: isCompact ? 17 : 22,
+                          fontWeight: FontWeight.w600,
+                          color: _navy,
+                          height: 1.3,
+                        ),
+                      ),
+                      SizedBox(height: isCompact ? 14 : 20),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(8),
+                              child: LinearProgressIndicator(
+                                value: progress.clamp(0.0, 1.0),
+                                minHeight: 9,
+                                backgroundColor: _pinkTrack,
+                                valueColor: AlwaysStoppedAnimation(accent),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          Text(
+                            '${(progress.clamp(0.0, 1.0) * 100).round()}%',
+                            style: GoogleFonts.nunito(
+                              fontWeight: FontWeight.w800,
+                              fontSize: 15,
+                              color: accent,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              child: Container(
+                padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+                decoration: BoxDecoration(
+                  color: t > 0.55
+                      ? Color.lerp(
+                          Colors.transparent,
+                          const Color(0xFFFDEEF3).withValues(alpha: 0.96),
+                          ((t - 0.55) / 0.45).clamp(0.0, 1.0),
+                        )
+                      : Colors.transparent,
+                ),
                 child: Row(
                   children: [
-                    IconButton(
-                      onPressed: () => Navigator.pop(context),
-                      icon: const Icon(Icons.arrow_back_rounded),
-                      style: IconButton.styleFrom(
-                        backgroundColor: Colors.white.withValues(alpha: 0.8),
+                    GestureDetector(
+                      onTap: () => Navigator.of(context).pop(),
+                      child: Container(
+                        width: 44,
+                        height: 44,
+                        decoration: BoxDecoration(
+                          color: Colors.white.withValues(alpha: 0.9),
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.06),
+                              blurRadius: 8,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: const Icon(
+                          Icons.arrow_back_rounded,
+                          color: _navy,
+                        ),
                       ),
                     ),
                     const SizedBox(width: 12),
-                    Text(category.emoji, style: const TextStyle(fontSize: 32)),
+                    Text(categoryEmoji, style: const TextStyle(fontSize: 28)),
                     const SizedBox(width: 8),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            category.name,
+                            categoryName,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                             style: GoogleFonts.fredoka(
-                              fontSize: 24,
+                              fontSize: 22,
                               fontWeight: FontWeight.w700,
+                              color: _navy,
                             ),
                           ),
                           Text(
-                            '${appState.completedCountForCategory(categoryId)}/${signs.length} learned',
-                            style: GoogleFonts.nunito(fontSize: 14),
+                            '$completed/$total learned',
+                            style: GoogleFonts.nunito(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600,
+                              color: _grayText,
+                            ),
                           ),
                         ],
                       ),
@@ -73,36 +487,80 @@ class CategoryDetailScreen extends StatelessWidget {
                   ],
                 ),
               ),
-              Expanded(
-                child: GridView.builder(
-                  padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
-                    mainAxisSpacing: 12,
-                    crossAxisSpacing: 12,
-                    childAspectRatio: 0.85,
-                  ),
-                  itemCount: signs.length,
-                  itemBuilder: (context, index) {
-                    final sign = signs[index];
-                    return SignLessonCard(
-                      word: sign.word,
-                      emoji: sign.emoji,
-                      isCompleted: appState.isSignCompleted(sign.id),
-                      onTap: () {
-                        Navigator.of(context).push(
-                          StorybookPageRoute(
-                            page: LessonScreen(signId: sign.id),
-                          ),
-                        );
-                      },
-                    );
-                  },
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
+      ),
+    );
+  }
+
+  @override
+  bool shouldRebuild(covariant _HeroHeaderDelegate oldDelegate) {
+    return oldDelegate.categoryEmoji != categoryEmoji ||
+        oldDelegate.categoryName != categoryName ||
+        oldDelegate.completed != completed ||
+        oldDelegate.total != total ||
+        oldDelegate.description != description ||
+        oldDelegate.progress != progress ||
+        oldDelegate.accent != accent ||
+        oldDelegate.kidImage != kidImage;
+  }
+}
+
+class _KidImageArt extends StatelessWidget {
+  const _KidImageArt({
+    this.kidImage,
+    required this.emoji,
+    required this.size,
+  });
+
+  final ImageProvider? kidImage;
+  final String emoji;
+  final double size;
+
+  static const Color _imageCircle = CategoryDetailScreen._imageCircle;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: size,
+      height: size,
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          Positioned(
+            right: 0,
+            bottom: 0,
+            child: Container(
+              width: size * 0.82,
+              height: size * 0.82,
+              decoration: BoxDecoration(
+                color: _imageCircle.withValues(alpha: 0.55),
+                shape: BoxShape.circle,
+              ),
+            ),
+          ),
+          Positioned(
+            top: 6,
+            right: 22,
+            child: Text('✨', style: TextStyle(fontSize: size * 0.09)),
+          ),
+          Positioned(
+            left: 0,
+            top: size * 0.32,
+            child: Text('✦', style: TextStyle(fontSize: size * 0.07)),
+          ),
+          Positioned.fill(
+            child: kidImage != null
+                ? Image(image: kidImage!, fit: BoxFit.contain)
+                : Center(
+                    child: Text(
+                      emoji,
+                      style: TextStyle(fontSize: size * 0.38),
+                    ),
+                  ),
+          ),
+        ],
       ),
     );
   }

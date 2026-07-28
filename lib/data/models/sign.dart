@@ -18,6 +18,9 @@ class Sign {
   final String signDescription;
   final String narration;
   final HandGestureType handGesture;
+
+  /// Placeholder illustration asset for this sign, e.g. assets/signs/yes.webp
+  String get imageAsset => 'assets/signs/$id.webp';
 }
 
 enum HandGestureType {
