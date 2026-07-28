@@ -405,8 +405,19 @@ abstract final class SignRepository {
   ];
 
   static final _weather = [
-    _s('hot', 'Hot', '🔥', 'weather', 'Feeling the warm sunshine on your face.',
-        'Wipe forehead like sweating.', 'Hot! Wipe your forehead — it\'s hot!', HandGestureType.rubBelly),
+    const Sign(
+      id: 'hot',
+      word: 'Hot',
+      emoji: '🔥',
+      categoryId: 'weather',
+      illustrationDescription:
+          'Feeling the warm sunshine on your face.',
+      signDescription:
+          'Wipe forehead like sweating.',
+      narration: 'Hot! Wipe your forehead — it\'s hot!',
+      handGesture: HandGestureType.rubBelly,
+      mainImagePath: 'assets/signs/hot/step_1.webp',
+    ),
     const Sign(
       id: 'cold',
       word: 'Cold',
