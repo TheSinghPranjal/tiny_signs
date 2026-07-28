@@ -187,8 +187,19 @@ abstract final class SignRepository {
       );
 
   static final _beginner = [
-    _s('yes', 'Yes', '✅', 'beginner', 'A happy child nodding with a big smile!',
-        'Make a fist and nod it up and down like nodding yes.', 'Yes means agree! Nod your fist up and down.', HandGestureType.fistBump),
+    const Sign(
+      id: 'yes',
+      word: 'Yes',
+      emoji: '✅',
+      categoryId: 'beginner',
+      illustrationDescription:
+          'A happy child nodding with a big smile!',
+      signDescription:
+          'Make a fist and nod it up and down like nodding yes.',
+      narration: 'Yes means agree! Nod your fist up and down.',
+      handGesture: HandGestureType.fistBump,
+      mainImagePath: 'assets/signs/yes/step_1.webp',
+    ),
     _s('no', 'No', '❌', 'beginner', 'A gentle shake of the head when something is not okay.',
         'Tap index and middle finger to thumb twice.', 'No means not this time. Tap your fingers together.', HandGestureType.pinch),
     _s('more', 'More', '➕', 'beginner', 'A toddler asking for more yummy snacks!',
@@ -199,9 +210,19 @@ abstract final class SignRepository {
         'Place one fist on flat palm and lift together.', 'Help! Put your fist on your other hand and lift up.', HandGestureType.flatHand),
     _s('please', 'Please', '🙏', 'beginner', 'Asking nicely for a favorite toy with a sweet face.',
         'Rub flat hand in a circle on your chest.', 'Please! Rub your hand on your chest in a circle.', HandGestureType.rubBelly),
-    _s('thank_you', 'Thank You', '💝', 'beginner', 'Giving a big thankful smile after receiving a gift.',
-        'Place the fingertips of your dominant hand on your chin, then move your hand forward and slightly downward.',
-        'Thank you! Touch your chin and move your hand forward.', HandGestureType.touchChin),
+    const Sign(
+      id: 'thank_you',
+      word: 'Thank You',
+      emoji: '💝',
+      categoryId: 'beginner',
+      illustrationDescription:
+          'Giving a big thankful smile after receiving a gift.',
+      signDescription:
+          'Place the fingertips of your dominant hand on your chin, then move your hand forward and slightly downward.',
+      narration: 'Thank you! Touch your chin and move your hand forward.',
+      handGesture: HandGestureType.touchChin,
+      mainImagePath: 'assets/signs/thank_you/step_1.webp',
+    ),
     _s('love', 'Love', '💕', 'beginner', 'Hugging a stuffed animal with a warm heart.',
         'Cross arms over chest in a hug motion.', 'Love! Cross your arms over your heart.', HandGestureType.hugMotion),
     _s('hug', 'Hug', '🤗', 'beginner', 'Two friends giving the biggest squishy hug!',
