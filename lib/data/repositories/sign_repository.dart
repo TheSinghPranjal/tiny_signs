@@ -40,13 +40,13 @@ abstract final class SignRepository {
     //   description: 'Everyday activities and routines',
     //   gradientIndex: 4,
     // ),
-    // SignCategory(
-    //   id: 'weather',
-    //   name: 'Weather',
-    //   emoji: '🌡️',
-    //   description: 'Signs about the world outside',
-    //   gradientIndex: 5,
-    // ),
+    SignCategory(
+      id: 'weather',
+      name: 'Weather',
+      emoji: '🌡️',
+      description: 'Signs about the world outside',
+      gradientIndex: 5,
+    ),
     // SignCategory(
     //   id: 'animals',
     //   name: 'Animals',
@@ -271,8 +271,19 @@ abstract final class SignRepository {
     ),
     _s('love', 'Love', '💕', 'beginner', 'Hugging a stuffed animal with a warm heart.',
         'Cross arms over chest in a hug motion.', 'Love! Cross your arms over your heart.', HandGestureType.hugMotion),
-    _s('hug', 'Hug', '🤗', 'beginner', 'Two friends giving the biggest squishy hug!',
-        'Wrap arms around yourself like a big hug.', 'Hug! Wrap your arms around yourself tight.', HandGestureType.hugMotion),
+    const Sign(
+      id: 'hug',
+      word: 'Hug',
+      emoji: '🤗',
+      categoryId: 'beginner',
+      illustrationDescription:
+          'Two friends giving the biggest squishy hug!',
+      signDescription:
+          'Wrap arms around yourself like a big hug.',
+      narration: 'Hug! Wrap your arms around yourself tight.',
+      handGesture: HandGestureType.hugMotion,
+      mainImagePath: 'assets/signs/hug/step_1.webp',
+    ),
     _s('up', 'Up', '⬆️', 'beginner', 'Reaching up high to catch floating bubbles!',
         'Point index finger upward and lift.', 'Up! Point your finger to the sky.', HandGestureType.point),
     _s('down', 'Down', '⬇️', 'beginner', 'Looking down at a cute puppy on the floor.',
@@ -396,8 +407,19 @@ abstract final class SignRepository {
   static final _weather = [
     _s('hot', 'Hot', '🔥', 'weather', 'Feeling the warm sunshine on your face.',
         'Wipe forehead like sweating.', 'Hot! Wipe your forehead — it\'s hot!', HandGestureType.rubBelly),
-    _s('cold', 'Cold', '🥶', 'weather', 'Shivering in the chilly winter air.',
-        'Shake arms like shivering.', 'Cold! Shake your arms — brrr!', HandGestureType.wave),
+    const Sign(
+      id: 'cold',
+      word: 'Cold',
+      emoji: '🥶',
+      categoryId: 'weather',
+      illustrationDescription:
+          'Shivering in the chilly winter air.',
+      signDescription:
+          'Shake arms like shivering.',
+      narration: 'Cold! Shake your arms — brrr!',
+      handGesture: HandGestureType.wave,
+      mainImagePath: 'assets/signs/cold/step_1.webp',
+    ),
     _s('rain', 'Rain', '🌧️', 'weather', 'Jumping in puddles during a rain shower.',
         'Wiggle fingers downward like rain falling.', 'Rain! Wiggle your fingers down like raindrops.', HandGestureType.wave),
     _s('snow', 'Snow', '❄️', 'weather', 'Catching snowflakes on your tongue!',
