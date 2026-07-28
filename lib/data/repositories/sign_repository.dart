@@ -448,8 +448,19 @@ abstract final class SignRepository {
       handGesture: HandGestureType.clap,
       mainImagePath: 'assets/signs/brother/step_1.webp',
     ),
-    _s('sister', 'Sister', '👧', 'family', 'Sharing toys with your sister.',
-        'Sign girl then sign together.', 'Sister! Brush cheek then clasp hands.', HandGestureType.touchChin),
+    const Sign(
+      id: 'sister',
+      word: 'Sister',
+      emoji: '👧',
+      categoryId: 'family',
+      illustrationDescription:
+          'Sharing toys with your sister.',
+      signDescription:
+          'Sign girl then sign together.',
+      narration: 'Sister! Brush cheek then clasp hands.',
+      handGesture: HandGestureType.touchChin,
+      mainImagePath: 'assets/signs/sister/step_1.webp',
+    ),
     _s('grandma', 'Grandma', '👵', 'family', 'Grandma baking cookies in the kitchen.',
         'Sign mother then bounce hand forward.', 'Grandma! Sign mom then bounce forward.', HandGestureType.wave),
     _s('grandpa', 'Grandpa', '👴', 'family', 'Grandpa telling funny stories on the porch.',
@@ -558,10 +569,32 @@ abstract final class SignRepository {
       handGesture: HandGestureType.wave,
       mainImagePath: 'assets/signs/excited/step_1.webp',
     ),
-    _s('surprised', 'Surprised', '😲', 'feelings', 'Eyes wide open at a magic trick!',
-        'Place flat hands on cheeks and open mouth.', 'Surprised! Put hands on your cheeks!', HandGestureType.openClose),
-    _s('calm', 'Calm', '😌', 'feelings', 'Taking deep breaths watching clouds float by.',
-        'Place flat hands palms down and lower slowly.', 'Calm! Lower your flat hands slowly.', HandGestureType.flatHand),
+    const Sign(
+      id: 'surprised',
+      word: 'Surprised',
+      emoji: '😲',
+      categoryId: 'feelings',
+      illustrationDescription:
+          'Eyes wide open at a magic trick!',
+      signDescription:
+          'Place flat hands on cheeks and open mouth.',
+      narration: 'Surprised! Put hands on your cheeks!',
+      handGesture: HandGestureType.openClose,
+      mainImagePath: 'assets/signs/surprised/step_1.webp',
+    ),
+    const Sign(
+      id: 'calm',
+      word: 'Calm',
+      emoji: '😌',
+      categoryId: 'feelings',
+      illustrationDescription:
+          'Taking deep breaths watching clouds float by.',
+      signDescription:
+          'Place flat hands palms down and lower slowly.',
+      narration: 'Calm! Lower your flat hands slowly.',
+      handGesture: HandGestureType.flatHand,
+      mainImagePath: 'assets/signs/calm/step_1.webp',
+    ),
   ];
 
   static final _dailyRoutine = [
@@ -618,8 +651,19 @@ abstract final class SignRepository {
       handGesture: HandGestureType.wave,
       mainImagePath: 'assets/signs/cold/step_1.webp',
     ),
-    _s('rain', 'Rain', '🌧️', 'weather', 'Jumping in puddles during a rain shower.',
-        'Wiggle fingers downward like rain falling.', 'Rain! Wiggle your fingers down like raindrops.', HandGestureType.wave),
+    const Sign(
+      id: 'rain',
+      word: 'Rain',
+      emoji: '🌧️',
+      categoryId: 'weather',
+      illustrationDescription:
+          'Jumping in puddles during a rain shower.',
+      signDescription:
+          'Wiggle fingers downward like rain falling.',
+      narration: 'Rain! Wiggle your fingers down like raindrops.',
+      handGesture: HandGestureType.wave,
+      mainImagePath: 'assets/signs/rain/step_1.webp',
+    ),
     _s('snow', 'Snow', '❄️', 'weather', 'Catching snowflakes on your tongue!',
         'Wiggle fingers downward while drifting side to side.', 'Snow! Wiggle fingers down and drift side to side.', HandGestureType.wave),
     _s('sun', 'Sun', '☀️', 'weather', 'Drawing sunshine in the bright blue sky.',
