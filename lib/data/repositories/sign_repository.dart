@@ -19,13 +19,13 @@ abstract final class SignRepository {
     //   description: 'Yummy signs for mealtime and snacks',
     //   gradientIndex: 2,
     // ),
-    // SignCategory(
-    //   id: 'family',
-    //   name: 'Family',
-    //   emoji: '👨‍👩‍👧',
-    //   description: 'Signs for the people you love most',
-    //   gradientIndex: 1,
-    // ),
+    SignCategory(
+      id: 'family',
+      name: 'Family',
+      emoji: '👨‍👩‍👧',
+      description: 'Signs for the people you love most',
+      gradientIndex: 1,
+    ),
     // SignCategory(
     //   id: 'feelings',
     //   name: 'Feelings',
@@ -200,16 +200,49 @@ abstract final class SignRepository {
       handGesture: HandGestureType.fistBump,
       mainImagePath: 'assets/signs/yes/step_1.webp',
     ),
-    _s('no', 'No', '❌', 'beginner', 'A gentle shake of the head when something is not okay.',
-        'Tap index and middle finger to thumb twice.', 'No means not this time. Tap your fingers together.', HandGestureType.pinch),
+    const Sign(
+      id: 'no',
+      word: 'No',
+      emoji: '❌',
+      categoryId: 'beginner',
+      illustrationDescription:
+          'A gentle shake of the head when something is not okay.',
+      signDescription:
+          'Tap index and middle finger to thumb twice.',
+      narration: 'No means not this time. Tap your fingers together.',
+      handGesture: HandGestureType.pinch,
+      mainImagePath: 'assets/signs/no/step_1.webp',
+    ),
     _s('more', 'More', '➕', 'beginner', 'A toddler asking for more yummy snacks!',
         'Tap fingertips of both hands together repeatedly.', 'More! Tap your fingertips together like you want more.', HandGestureType.clap),
     _s('all_done', 'All Done', '✔️', 'beginner', 'Waving goodbye to empty plates after a meal.',
         'Twist both hands palms out, like shaking off water.', 'All done! Show your empty hands — we finished!', HandGestureType.wave),
-    _s('help', 'Help', '🆘', 'beginner', 'A little one reaching up for a helping hand.',
-        'Place one fist on flat palm and lift together.', 'Help! Put your fist on your other hand and lift up.', HandGestureType.flatHand),
-    _s('please', 'Please', '🙏', 'beginner', 'Asking nicely for a favorite toy with a sweet face.',
-        'Rub flat hand in a circle on your chest.', 'Please! Rub your hand on your chest in a circle.', HandGestureType.rubBelly),
+    const Sign(
+      id: 'help',
+      word: 'Help',
+      emoji: '🆘',
+      categoryId: 'beginner',
+      illustrationDescription:
+          'A little one reaching up for a helping hand.',
+      signDescription:
+          'Place one fist on flat palm and lift together.',
+      narration: 'Help! Put your fist on your other hand and lift up.',
+      handGesture: HandGestureType.flatHand,
+      mainImagePath: 'assets/signs/help/step_1.webp',
+    ),
+    const Sign(
+      id: 'please',
+      word: 'Please',
+      emoji: '🙏',
+      categoryId: 'beginner',
+      illustrationDescription:
+          'Asking nicely for a favorite toy with a sweet face.',
+      signDescription:
+          'Rub flat hand in a circle on your chest.',
+      narration: 'Please! Rub your hand on your chest in a circle.',
+      handGesture: HandGestureType.rubBelly,
+      mainImagePath: 'assets/signs/please/step_1.webp',
+    ),
     const Sign(
       id: 'thank_you',
       word: 'Thank You',
@@ -222,6 +255,19 @@ abstract final class SignRepository {
       narration: 'Thank you! Touch your chin and move your hand forward.',
       handGesture: HandGestureType.touchChin,
       mainImagePath: 'assets/signs/thank_you/step_1.webp',
+    ),
+    const Sign(
+      id: 'pray',
+      word: 'Pray',
+      emoji: '🙏',
+      categoryId: 'beginner',
+      illustrationDescription:
+          'Pressing hands together with a peaceful smile.',
+      signDescription:
+          'Press palms together in front of your chest.',
+      narration: 'Pray! Press your hands together in front of your heart.',
+      handGesture: HandGestureType.clap,
+      mainImagePath: 'assets/signs/pray/step_1.webp',
     ),
     _s('love', 'Love', '💕', 'beginner', 'Hugging a stuffed animal with a warm heart.',
         'Cross arms over chest in a hug motion.', 'Love! Cross your arms over your heart.', HandGestureType.hugMotion),
