@@ -18,12 +18,12 @@ class SignStepsView extends StatelessWidget {
     required this.mainImage,
     required this.additionalStepImages,
     required this.instruction,
-    this.heroBackground = const Color(0xFFF8E4D8),
-    this.stepBackground = const Color(0xFFF8E4D8),
+    this.heroBackground = const Color(0xFFFBE1E8),
+    this.stepBackground = const Color(0xFFFBE1E8),
   }) : assert(
-          additionalStepImages.length >= 1 && additionalStepImages.length <= 2,
-          'Provide 1 additional image for 2 steps, or 2 for 3 steps.',
-        );
+         additionalStepImages.length >= 1 && additionalStepImages.length <= 2,
+         'Provide 1 additional image for 2 steps, or 2 for 3 steps.',
+       );
 
   final String title;
   final String subtitle;
@@ -37,10 +37,16 @@ class SignStepsView extends StatelessWidget {
   final Color heroBackground;
   final Color stepBackground;
 
-  static const Color _navy = Color(0xFF1B1B3A);
-  static const Color _gray = Color(0xFF8D8FA3);
-  static const Color _cardBg = Color(0xFFF7F7F9);
-  static const Color _tipBg = Color(0xFFFFF0D6);
+  // ─── Palette ──────────────────────────────────────────────────────────
+  static const Color _navy = Color(0xFF211E4B);
+  static const Color _gray = Color(0xFF9A96B8);
+  static const Color _purple = Color(0xFF8073E8);
+  static const Color _purpleDeep = Color(0xFF6C5CE7);
+  static const Color _lilac = Color(0xFFC9BEF0);
+  static const Color _cardBg = Colors.white;
+  static const Color _tipBg = Color(0xFFFCEFD3);
+  static const Color _tipIconBg = Color(0xFFFFE3A3);
+  static const Color _tipIconColor = Color(0xFFE6A817);
 
   int get _stepCount => additionalStepImages.length + 1;
 
@@ -49,67 +55,170 @@ class SignStepsView extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         final wide = constraints.maxWidth >= 600;
-        final heroSize = (constraints.maxWidth * (wide ? 0.42 : 0.62))
-            .clamp(180.0, wide ? 280.0 : 240.0);
-        final stepSize = (constraints.maxWidth / (_stepCount + 1.4))
-            .clamp(72.0, wide ? 110.0 : 96.0);
+        final heroSize = (constraints.maxWidth * (wide ? 0.42 : 0.6)).clamp(
+          180.0,
+          wide ? 280.0 : 232.0,
+        );
+        final stepSize = (constraints.maxWidth / (_stepCount + 1.4)).clamp(
+          72.0,
+          wide ? 110.0 : 96.0,
+        );
 
-        return SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(24, 4, 24, 8),
-          child: ConstrainedBox(
-            constraints: BoxConstraints(minHeight: constraints.maxHeight - 12),
-            child: Column(
-              children: [
-                Text(
-                  title.toUpperCase(),
-                  textAlign: TextAlign.center,
-                  style: GoogleFonts.fredoka(
-                    fontSize: wide ? 36 : 30,
-                    fontWeight: FontWeight.w700,
-                    color: _navy,
-                    letterSpacing: 1.2,
-                  ),
+        return Stack(
+          children: [
+            // Soft decorative background — stars, sparkles, dots.
+            Positioned.fill(child: IgnorePointer(child: _FloatingDecor())),
+            SingleChildScrollView(
+              padding: const EdgeInsets.fromLTRB(24, 6, 24, 8),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  minHeight: constraints.maxHeight - 12,
                 ),
-                const SizedBox(height: 4),
-                Text(
-                  subtitle,
-                  textAlign: TextAlign.center,
-                  style: GoogleFonts.nunito(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
-                    color: _gray,
-                  ),
-                ),
-                SizedBox(height: wide ? 28 : 20),
-                _HeroCircle(
-                  size: heroSize,
-                  image: mainImage,
-                  background: heroBackground,
-                )
-                    .animate()
-                    .fadeIn(duration: 400.ms)
-                    .scale(
-                      begin: const Offset(0.92, 0.92),
-                      end: const Offset(1, 1),
-                      curve: Curves.easeOutBack,
-                      duration: 500.ms,
+                child: Column(
+                  children: [
+                    _TitleWithAccents(title: title, wide: wide),
+                    const SizedBox(height: 4),
+                    Text(
+                      subtitle,
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.nunito(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w700,
+                        color: _gray,
+                        letterSpacing: 0.2,
+                      ),
                     ),
-                SizedBox(height: wide ? 28 : 22),
-                _StepRow(
-                  stepSize: stepSize,
-                  stepBackground: stepBackground,
-                  images: [
-                    mainImage,
-                    ...additionalStepImages,
+                    SizedBox(height: wide ? 30 : 22),
+                    _HeroCircle(
+                          size: heroSize,
+                          image: mainImage,
+                          background: heroBackground,
+                        )
+                        .animate()
+                        .fadeIn(duration: 400.ms)
+                        .scale(
+                          begin: const Offset(0.9, 0.9),
+                          end: const Offset(1, 1),
+                          curve: Curves.easeOutBack,
+                          duration: 550.ms,
+                        ),
+                    SizedBox(height: wide ? 30 : 24),
+                    const _SectionPill(label: 'How to do it'),
+                    const SizedBox(height: 14),
+                    _StepRow(
+                      stepSize: stepSize,
+                      stepBackground: stepBackground,
+                      images: [mainImage, ...additionalStepImages],
+                    ),
+                    SizedBox(height: wide ? 26 : 20),
+                    _InstructionCard(instruction: instruction),
+                    const SizedBox(height: 4),
                   ],
                 ),
-                SizedBox(height: wide ? 28 : 22),
-                _InstructionCard(instruction: instruction),
-              ],
+              ),
             ),
-          ),
+          ],
         );
       },
+    );
+  }
+}
+
+/// Title flanked by small decorative "swoosh" accents, like the reference.
+class _TitleWithAccents extends StatelessWidget {
+  const _TitleWithAccents({required this.title, required this.wide});
+
+  final String title;
+  final bool wide;
+
+  @override
+  Widget build(BuildContext context) {
+    final titleText = Text(
+      title.toUpperCase(),
+      textAlign: TextAlign.center,
+      style: GoogleFonts.fredoka(
+        fontSize: wide ? 38 : 32,
+        fontWeight: FontWeight.w700,
+        color: SignStepsView._navy,
+        letterSpacing: 1.2,
+      ),
+    );
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        const _Swoosh(),
+        const SizedBox(width: 10),
+        Flexible(child: titleText),
+        const SizedBox(width: 10),
+        const _Swoosh(flipped: true),
+      ],
+    );
+  }
+}
+
+class _Swoosh extends StatelessWidget {
+  const _Swoosh({this.flipped = false});
+
+  final bool flipped;
+
+  @override
+  Widget build(BuildContext context) {
+    Widget bar(double width, double opacity) => Container(
+      width: width,
+      height: 3.5,
+      margin: const EdgeInsets.symmetric(vertical: 1.5),
+      decoration: BoxDecoration(
+        color: SignStepsView._lilac.withValues(alpha: opacity),
+        borderRadius: BorderRadius.circular(4),
+      ),
+    );
+
+    final bars = Column(
+      crossAxisAlignment: flipped
+          ? CrossAxisAlignment.end
+          : CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [bar(14, 1), bar(10, 0.7), bar(6, 0.45)],
+    );
+
+    return Transform.rotate(angle: flipped ? -0.35 : 0.35, child: bars);
+  }
+}
+
+/// Small rounded pill used above the step row ("How to do it").
+class _SectionPill extends StatelessWidget {
+  const _SectionPill({required this.label});
+
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          colors: [SignStepsView._purple, SignStepsView._purpleDeep],
+        ),
+        borderRadius: BorderRadius.circular(30),
+        boxShadow: [
+          BoxShadow(
+            color: SignStepsView._purpleDeep.withValues(alpha: 0.35),
+            blurRadius: 14,
+            offset: const Offset(0, 6),
+          ),
+        ],
+      ),
+      child: Text(
+        label,
+        style: GoogleFonts.nunito(
+          fontSize: 14,
+          fontWeight: FontWeight.w800,
+          color: Colors.white,
+          letterSpacing: 0.3,
+        ),
+      ),
     );
   }
 }
@@ -127,27 +236,102 @@ class _HeroCircle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: size,
-      height: size,
-      decoration: BoxDecoration(
-        color: background,
-        shape: BoxShape.circle,
-        boxShadow: [
-          BoxShadow(
-            color: background.withValues(alpha: 0.55),
-            blurRadius: 24,
-            offset: const Offset(0, 10),
+    final badgeSize = (size * 0.24).clamp(40.0, 56.0);
+
+    return SizedBox(
+      width: size + 12,
+      height: size + 12,
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          Center(
+            child: Container(
+              width: size,
+              height: size,
+              padding: const EdgeInsets.all(6),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: SignStepsView._purple.withValues(alpha: 0.22),
+                    blurRadius: 28,
+                    offset: const Offset(0, 14),
+                  ),
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.04),
+                    blurRadius: 6,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: background,
+                  shape: BoxShape.circle,
+                ),
+                clipBehavior: Clip.antiAlias,
+                child: Image(
+                  image: image,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) => const Center(
+                    child: Icon(Icons.image_not_supported_outlined, size: 40),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          // Sparkle accents around the hero circle.
+          Positioned(
+            top: 4,
+            left: 8,
+            child: Icon(
+              Icons.auto_awesome,
+              size: 16,
+              color: SignStepsView._lilac.withValues(alpha: 0.9),
+            ),
+          ),
+          Positioned(
+            top: 22,
+            right: -2,
+            child: Icon(
+              Icons.circle,
+              size: 8,
+              color: SignStepsView._purple.withValues(alpha: 0.5),
+            ),
+          ),
+          // Purple badge, bottom-right.
+          Positioned(
+            bottom: 4,
+            right: 4,
+            child: Container(
+              width: badgeSize,
+              height: badgeSize,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [SignStepsView._purple, SignStepsView._purpleDeep],
+                ),
+                shape: BoxShape.circle,
+                border: Border.all(color: Colors.white, width: 3),
+                boxShadow: [
+                  BoxShadow(
+                    color: SignStepsView._purpleDeep.withValues(alpha: 0.4),
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: Icon(
+                Icons.front_hand_rounded,
+                color: Colors.white,
+                size: badgeSize * 0.5,
+              ),
+            ),
           ),
         ],
-      ),
-      clipBehavior: Clip.antiAlias,
-      child: Image(
-        image: image,
-        fit: BoxFit.cover,
-        errorBuilder: (context, error, stackTrace) => const Center(
-          child: Icon(Icons.image_not_supported_outlined, size: 40),
-        ),
       ),
     );
   }
@@ -172,11 +356,19 @@ class _StepRow extends StatelessWidget {
         for (var i = 0; i < images.length; i++) ...[
           if (i > 0) ...[
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              child: Icon(
-                Icons.arrow_forward_rounded,
-                color: SignStepsView._navy,
-                size: stepSize * 0.28,
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: Container(
+                width: stepSize * 0.34,
+                height: stepSize * 0.34,
+                decoration: BoxDecoration(
+                  color: SignStepsView._lilac.withValues(alpha: 0.35),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  Icons.arrow_forward_rounded,
+                  color: SignStepsView._purpleDeep,
+                  size: stepSize * 0.22,
+                ),
               ),
             ),
           ],
@@ -207,11 +399,11 @@ class _StepCircle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final badge = (size * 0.28).clamp(22.0, 30.0);
+    final badge = (size * 0.3).clamp(24.0, 32.0);
 
     return SizedBox(
-      width: size,
-      height: size + badge * 0.45,
+      width: size + 6,
+      height: size + badge * 0.55,
       child: Stack(
         alignment: Alignment.topCenter,
         clipBehavior: Clip.none,
@@ -219,27 +411,34 @@ class _StepCircle extends StatelessWidget {
           Container(
             width: size,
             height: size,
+            padding: const EdgeInsets.all(4),
             decoration: BoxDecoration(
-              color: background,
+              color: Colors.white,
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.06),
-                  blurRadius: 10,
-                  offset: const Offset(0, 4),
+                  color: SignStepsView._purple.withValues(alpha: 0.16),
+                  blurRadius: 14,
+                  offset: const Offset(0, 6),
                 ),
               ],
             ),
-            clipBehavior: Clip.antiAlias,
-            child: Image(
-              image: image,
-              fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) => Center(
-                child: Text(
-                  '$stepNumber',
-                  style: GoogleFonts.fredoka(
-                    fontSize: size * 0.3,
-                    color: SignStepsView._navy,
+            child: Container(
+              decoration: BoxDecoration(
+                color: background,
+                shape: BoxShape.circle,
+              ),
+              clipBehavior: Clip.antiAlias,
+              child: Image(
+                image: image,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) => Center(
+                  child: Text(
+                    '$stepNumber',
+                    style: GoogleFonts.fredoka(
+                      fontSize: size * 0.3,
+                      color: SignStepsView._navy,
+                    ),
                   ),
                 ),
               ),
@@ -252,13 +451,15 @@ class _StepCircle extends StatelessWidget {
               height: badge,
               alignment: Alignment.center,
               decoration: BoxDecoration(
-                color: SignStepsView._navy,
+                gradient: const LinearGradient(
+                  colors: [SignStepsView._purple, SignStepsView._purpleDeep],
+                ),
                 shape: BoxShape.circle,
-                border: Border.all(color: Colors.white, width: 2),
+                border: Border.all(color: Colors.white, width: 2.5),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.12),
-                    blurRadius: 4,
+                    color: Colors.black.withValues(alpha: 0.14),
+                    blurRadius: 5,
                     offset: const Offset(0, 2),
                   ),
                 ],
@@ -288,42 +489,164 @@ class _InstructionCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.fromLTRB(14, 14, 16, 14),
+      padding: const EdgeInsets.fromLTRB(16, 16, 18, 16),
       decoration: BoxDecoration(
-        color: SignStepsView._cardBg,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: const Color(0xFFEEEEF2)),
+        color: SignStepsView._tipBg,
+        borderRadius: BorderRadius.circular(22),
+        boxShadow: [
+          BoxShadow(
+            color: SignStepsView._tipIconColor.withValues(alpha: 0.12),
+            blurRadius: 18,
+            offset: const Offset(0, 8),
+          ),
+        ],
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            width: 40,
-            height: 40,
+            width: 42,
+            height: 42,
             decoration: const BoxDecoration(
-              color: SignStepsView._tipBg,
+              color: SignStepsView._tipIconBg,
               shape: BoxShape.circle,
             ),
             child: const Icon(
               Icons.lightbulb_rounded,
-              color: Color(0xFFE6A817),
+              color: SignStepsView._tipIconColor,
               size: 22,
             ),
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: 14),
           Expanded(
-            child: Text(
-              instruction,
-              style: GoogleFonts.nunito(
-                fontSize: 14.5,
-                fontWeight: FontWeight.w600,
-                color: const Color(0xFF4A4A5C),
-                height: 1.4,
-              ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Tip',
+                  style: GoogleFonts.fredoka(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                    color: SignStepsView._navy,
+                  ),
+                ),
+                const SizedBox(height: 3),
+                Text(
+                  instruction,
+                  style: GoogleFonts.nunito(
+                    fontSize: 14.5,
+                    fontWeight: FontWeight.w600,
+                    color: const Color(0xFF4A4A5C),
+                    height: 1.4,
+                  ),
+                ),
+              ],
             ),
           ),
         ],
       ),
     );
   }
+}
+
+/// A handful of soft, fixed-position decorative shapes (stars, dots,
+/// sparkles) scattered behind the content, echoing the reference design.
+/// Positions are expressed as fractional offsets so they scale with the
+/// available space.
+class _FloatingDecor extends StatelessWidget {
+  const _FloatingDecor();
+
+  static const List<_DecorSpec> _specs = [
+    _DecorSpec(
+      dx: 0.06,
+      dy: 0.10,
+      icon: Icons.star_rounded,
+      size: 20,
+      color: Color(0xFFFFD166),
+      opacity: 0.9,
+    ),
+    _DecorSpec(
+      dx: 0.90,
+      dy: 0.06,
+      icon: Icons.circle,
+      size: 10,
+      color: SignStepsView._purple,
+      opacity: 0.35,
+    ),
+    _DecorSpec(
+      dx: 0.10,
+      dy: 0.42,
+      icon: Icons.auto_awesome,
+      size: 16,
+      color: Color(0xFFF4B6C2),
+      opacity: 0.8,
+    ),
+    _DecorSpec(
+      dx: 0.92,
+      dy: 0.34,
+      icon: Icons.circle_outlined,
+      size: 18,
+      color: SignStepsView._purple,
+      opacity: 0.45,
+    ),
+    _DecorSpec(
+      dx: 0.08,
+      dy: 0.62,
+      icon: Icons.auto_awesome,
+      size: 12,
+      color: Color(0xFFF4B6C2),
+      opacity: 0.7,
+    ),
+    _DecorSpec(
+      dx: 0.94,
+      dy: 0.58,
+      icon: Icons.auto_awesome,
+      size: 14,
+      color: SignStepsView._lilac,
+      opacity: 0.9,
+    ),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final w = constraints.maxWidth;
+        final h = constraints.maxHeight.isFinite
+            ? constraints.maxHeight
+            : 700.0;
+        return Stack(
+          children: [
+            for (final spec in _specs)
+              Positioned(
+                left: spec.dx * w,
+                top: spec.dy * h,
+                child: Opacity(
+                  opacity: spec.opacity,
+                  child: Icon(spec.icon, size: spec.size, color: spec.color),
+                ),
+              ),
+          ],
+        );
+      },
+    );
+  }
+}
+
+class _DecorSpec {
+  const _DecorSpec({
+    required this.dx,
+    required this.dy,
+    required this.icon,
+    required this.size,
+    required this.color,
+    this.opacity = 1,
+  });
+
+  final double dx;
+  final double dy;
+  final IconData icon;
+  final double size;
+  final Color color;
+  final double opacity;
 }
