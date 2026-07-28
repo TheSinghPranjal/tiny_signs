@@ -432,12 +432,45 @@ abstract final class SignRepository {
   ];
 
   static final _feelings = [
-    _s('happy', 'Happy', '😊', 'feelings', 'Jumping with joy on a sunny day!',
-        'Brush chest upward twice with flat hands.', 'Happy! Brush up on your chest with both hands.', HandGestureType.rubBelly),
-    _s('sad', 'Sad', '😢', 'feelings', 'A little tear when missing a friend.',
-        'Draw fingers down face like tears.', 'Sad! Draw your fingers down your face.', HandGestureType.wave),
-    _s('angry', 'Angry', '😠', 'feelings', 'Crossing arms when things feel unfair.',
-        'Claw hand pulls from stomach upward.', 'Angry! Pull your claw hand up from your tummy.', HandGestureType.clap),
+    const Sign(
+      id: 'happy',
+      word: 'Happy',
+      emoji: '😊',
+      categoryId: 'feelings',
+      illustrationDescription:
+          'Jumping with joy on a sunny day!',
+      signDescription:
+          'Brush chest upward twice with flat hands.',
+      narration: 'Happy! Brush up on your chest with both hands.',
+      handGesture: HandGestureType.rubBelly,
+      mainImagePath: 'assets/signs/happy/step_1.webp',
+    ),
+    const Sign(
+      id: 'sad',
+      word: 'Sad',
+      emoji: '😢',
+      categoryId: 'feelings',
+      illustrationDescription:
+          'A little tear when missing a friend.',
+      signDescription:
+          'Draw fingers down face like tears.',
+      narration: 'Sad! Draw your fingers down your face.',
+      handGesture: HandGestureType.wave,
+      mainImagePath: 'assets/signs/sad/step_1.webp',
+    ),
+    const Sign(
+      id: 'angry',
+      word: 'Angry',
+      emoji: '😠',
+      categoryId: 'feelings',
+      illustrationDescription:
+          'Crossing arms when things feel unfair.',
+      signDescription:
+          'Claw hand pulls from stomach upward.',
+      narration: 'Angry! Pull your claw hand up from your tummy.',
+      handGesture: HandGestureType.clap,
+      mainImagePath: 'assets/signs/angry/step_1.webp',
+    ),
     const Sign(
       id: 'hurt',
       word: 'Hurt',
@@ -455,10 +488,32 @@ abstract final class SignRepository {
         'Place flat hand on side of face, tilt head.', 'Sleepy! Rest your hand on your cheek and tilt.', HandGestureType.touchChin),
     _s('sick', 'Sick', '🤒', 'feelings', 'Resting on the couch with a cozy blanket.',
         'Place middle fingers on forehead and stomach.', 'Sick! Touch your forehead and tummy.', HandGestureType.touchChin),
-    _s('scared', 'Scared', '😨', 'feelings', 'Hiding behind mom during a loud thunderstorm.',
-        'Shake hands in front of chest quickly.', 'Scared! Shake your hands in front of you.', HandGestureType.wave),
-    _s('excited', 'Excited', '🤩', 'feelings', 'Bouncing up and down for a birthday party!',
-        'Shake both hands up and down alternately.', 'Excited! Shake your hands up and down!', HandGestureType.wave),
+    const Sign(
+      id: 'scared',
+      word: 'Scared',
+      emoji: '😨',
+      categoryId: 'feelings',
+      illustrationDescription:
+          'Hiding behind mom during a loud thunderstorm.',
+      signDescription:
+          'Shake hands in front of chest quickly.',
+      narration: 'Scared! Shake your hands in front of you.',
+      handGesture: HandGestureType.wave,
+      mainImagePath: 'assets/signs/scared/step_1.webp',
+    ),
+    const Sign(
+      id: 'excited',
+      word: 'Excited',
+      emoji: '🤩',
+      categoryId: 'feelings',
+      illustrationDescription:
+          'Bouncing up and down for a birthday party!',
+      signDescription:
+          'Shake both hands up and down alternately.',
+      narration: 'Excited! Shake your hands up and down!',
+      handGesture: HandGestureType.wave,
+      mainImagePath: 'assets/signs/excited/step_1.webp',
+    ),
     _s('surprised', 'Surprised', '😲', 'feelings', 'Eyes wide open at a magic trick!',
         'Place flat hands on cheeks and open mouth.', 'Surprised! Put hands on your cheeks!', HandGestureType.openClose),
     _s('calm', 'Calm', '😌', 'feelings', 'Taking deep breaths watching clouds float by.',
