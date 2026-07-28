@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
@@ -73,22 +75,17 @@ class MascotWidget extends StatelessWidget {
                 ],
               ),
               SizedBox(height: size * 0.05),
-              Container(
-                width: size * 0.2,
-                height: size * 0.08,
-                decoration: BoxDecoration(
-                  color: const Color(0xFFE57373),
-                  borderRadius: BorderRadius.circular(size),
+              SizedBox(
+                width: size * 0.28,
+                height: size * 0.14,
+                child: CustomPaint(
+                  painter: _SmilePainter(
+                    color: const Color(0xFFE57373),
+                    strokeWidth: size * 0.035,
+                  ),
                 ),
               ),
             ],
-          ),
-          Positioned(
-            right: size * 0.05,
-            top: size * 0.25,
-            child: Text('👋', style: TextStyle(fontSize: size * 0.25))
-                .animate(onPlay: (c) => c.repeat(reverse: true))
-                .rotate(begin: -0.2, end: 0.3, duration: 600.ms),
           ),
         ],
       ),
@@ -101,6 +98,35 @@ class MascotWidget extends StatelessWidget {
           curve: Curves.elasticOut,
         );
   }
+}
+
+class _SmilePainter extends CustomPainter {
+  const _SmilePainter({required this.color, required this.strokeWidth});
+
+  final Color color;
+  final double strokeWidth;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = color
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = strokeWidth
+      ..strokeCap = StrokeCap.round;
+
+    final path = Path()
+      ..addArc(
+        Rect.fromLTWH(0, 0, size.width, size.height * 1.8),
+        pi * 0.15,
+        pi * 0.7,
+      );
+
+    canvas.drawPath(path, paint);
+  }
+
+  @override
+  bool shouldRepaint(covariant _SmilePainter oldDelegate) =>
+      oldDelegate.color != color || oldDelegate.strokeWidth != strokeWidth;
 }
 
 class _Eye extends StatelessWidget {
