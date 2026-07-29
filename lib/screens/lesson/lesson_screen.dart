@@ -204,12 +204,12 @@ class _LessonHeader extends StatelessWidget {
           Expanded(
             child: ProgressStars(current: stepIndex + 1, total: totalSteps),
           ),
-          _RoundIconButton(
-            icon: Icons.check_rounded,
-            iconColor: Colors.white,
-            background: _green,
-            onTap: onFinish,
-          ),
+          // _RoundIconButton(
+          //   icon: Icons.check_rounded,
+          //   iconColor: Colors.white,
+          //   background: _green,
+          //   onTap: onFinish,
+          // ),
         ],
       ),
     );
@@ -258,66 +258,228 @@ class _RoundIconButton extends StatelessWidget {
   }
 }
 
+// word section
+
 class _WordSection extends StatelessWidget {
   const _WordSection({super.key, required this.sign});
 
   final Sign sign;
 
+  static const Color _navy = Color(0xFF211E4B);
+  static const Color _pinkLight = Color(0xFFFFF5F8);
+  static const Color _pinkMid = Color(0xFFFCE0E8);
+  static const Color _pinkAccent = Color(0xFFF5A8BC);
+  static const Color _frameBg = Color(0xFFFBE8EE);
+
   @override
   Widget build(BuildContext context) {
-    final gradient = AppColors.categoryGradients[0];
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final imageSize = (constraints.maxWidth * 0.72).clamp(220.0, 300.0);
 
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 48, vertical: 32),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(colors: gradient),
-              borderRadius: BorderRadius.circular(32),
-              boxShadow: [
-                BoxShadow(
-                  color: gradient.last.withValues(alpha: 0.4),
-                  blurRadius: 24,
-                  offset: const Offset(0, 12),
+        return Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 8),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                _WordHeroCard(
+                      size: imageSize,
+                      imageAsset: sign.mainImageAsset,
+                      fallbackEmoji: sign.emoji,
+                      background: _frameBg,
+                    )
+                    .animate()
+                    .fadeIn(duration: 400.ms)
+                    .scale(
+                      begin: const Offset(0.92, 0.92),
+                      end: const Offset(1, 1),
+                      curve: Curves.easeOutBack,
+                      duration: 550.ms,
+                    ),
+                const SizedBox(height: 28),
+                _WordBadge(
+                      word: sign.word,
+                      pinkLight: _pinkLight,
+                      pinkMid: _pinkMid,
+                      pinkAccent: _pinkAccent,
+                      textColor: _navy,
+                    )
+                    .animate()
+                    .scale(
+                      begin: const Offset(0.8, 0.8),
+                      end: const Offset(1, 1),
+                      duration: 600.ms,
+                      curve: Curves.elasticOut,
+                    ),
+                const SizedBox(height: 20),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  child: Text(
+                    sign.narration,
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.nunito(
+                      fontSize: 17,
+                      fontWeight: FontWeight.w600,
+                      height: 1.45,
+                      color: _navy.withValues(alpha: 0.78),
+                    ),
+                  ),
                 ),
               ],
             ),
-            child: Text(
-              sign.word.toUpperCase(),
-              style: GoogleFonts.fredoka(
-                fontSize: 48,
-                fontWeight: FontWeight.w800,
-                color: AppColors.textPrimary,
-                letterSpacing: 2,
-              ),
-            ),
-          )
-              .animate()
-              .scale(
-            begin: const Offset(0.8, 0.8),
-            end: const Offset(1, 1),
-            duration: 600.ms,
-            curve: Curves.elasticOut,
           ),
-          const SizedBox(height: 24),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 32),
-            child: Text(
-              sign.narration,
-              textAlign: TextAlign.center,
-              style: GoogleFonts.nunito(fontSize: 18),
-            ),
+        );
+      },
+    );
+  }
+}
+
+class _WordHeroCard extends StatelessWidget {
+  const _WordHeroCard({
+    required this.size,
+    required this.imageAsset,
+    required this.fallbackEmoji,
+    required this.background,
+  });
+
+  final double size;
+  final String imageAsset;
+  final String fallbackEmoji;
+  final Color background;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: size,
+      height: size,
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(36),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.06),
+            blurRadius: 20,
+            offset: const Offset(0, 8),
           ),
         ],
       ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(28),
+        child: ColoredBox(
+          color: background,
+          child: Image.asset(
+            imageAsset,
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) => Center(
+              child: Text(fallbackEmoji, style: const TextStyle(fontSize: 96)),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _WordBadge extends StatelessWidget {
+  const _WordBadge({
+    required this.word,
+    required this.pinkLight,
+    required this.pinkMid,
+    required this.pinkAccent,
+    required this.textColor,
+  });
+
+  final String word;
+  final Color pinkLight;
+  final Color pinkMid;
+  final Color pinkAccent;
+  final Color textColor;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        _WordSparkles(color: pinkAccent),
+        const SizedBox(width: 10),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 14),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [pinkLight, pinkMid],
+            ),
+            borderRadius: BorderRadius.circular(40),
+            boxShadow: [
+              BoxShadow(
+                color: pinkMid.withValues(alpha: 0.55),
+                blurRadius: 16,
+                offset: const Offset(0, 8),
+              ),
+            ],
+          ),
+          child: Text(
+            word.toUpperCase(),
+            style: GoogleFonts.fredoka(
+              fontSize: 36,
+              fontWeight: FontWeight.w700,
+              color: textColor,
+              letterSpacing: 1.5,
+            ),
+          ),
+        ),
+        const SizedBox(width: 10),
+        _WordSparkles(color: pinkAccent, flipped: true),
+      ],
+    );
+  }
+}
+
+/// Three slanted pink dashes flanking the word pill.
+class _WordSparkles extends StatelessWidget {
+  const _WordSparkles({required this.color, this.flipped = false});
+
+  final Color color;
+  final bool flipped;
+
+  @override
+  Widget build(BuildContext context) {
+    Widget bar(double width, double opacity) => Container(
+          width: width,
+          height: 3.5,
+          margin: const EdgeInsets.symmetric(vertical: 2),
+          decoration: BoxDecoration(
+            color: color.withValues(alpha: opacity),
+            borderRadius: BorderRadius.circular(4),
+          ),
+        );
+
+    final bars = Column(
+      crossAxisAlignment:
+          flipped ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        bar(16, 1),
+        bar(12, 0.75),
+        bar(8, 0.5),
+      ],
+    );
+
+    return Transform.rotate(
+      angle: flipped ? -0.4 : 0.4,
+      child: bars,
     );
   }
 }
 
 /// Hero circle + numbered steps (2 by default, 3 when stepThree is set)
 /// + instruction tip card.
+///
+/// second screen signs
 class _SignStepsSection extends StatelessWidget {
   const _SignStepsSection({super.key, required this.sign});
 
@@ -342,6 +504,8 @@ class _SignStepsSection extends StatelessWidget {
   }
 }
 
+
+// third screen practise
 class _PracticeSection extends StatelessWidget {
   const _PracticeSection({super.key, required this.sign});
 
