@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:video_player/video_player.dart';
 
 /// Professional sign-instruction layout matching the reference design:
 /// title + subtitle, large hero circle, numbered step circles (2 or 3),
@@ -18,6 +19,7 @@ class SignStepsView extends StatelessWidget {
     required this.mainImage,
     required this.additionalStepImages,
     required this.instruction,
+    this.videoAsset,
     this.heroBackground = const Color(0xFFFBE1E8),
     this.stepBackground = const Color(0xFFFBE1E8),
   }) : assert(
@@ -34,6 +36,10 @@ class SignStepsView extends StatelessWidget {
   final List<ImageProvider> additionalStepImages;
 
   final String instruction;
+
+  /// Optional asset path for a looping demo video in the hero circle.
+  final String? videoAsset;
+
   final Color heroBackground;
   final Color stepBackground;
 
@@ -93,6 +99,7 @@ class SignStepsView extends StatelessWidget {
                           size: heroSize,
                           image: mainImage,
                           background: heroBackground,
+                          videoAsset: videoAsset,
                         )
                         .animate()
                         .fadeIn(duration: 400.ms)
@@ -223,20 +230,109 @@ class _SectionPill extends StatelessWidget {
   }
 }
 
-class _HeroCircle extends StatelessWidget {
+class _HeroCircle extends StatefulWidget {
   const _HeroCircle({
     required this.size,
     required this.image,
     required this.background,
+    this.videoAsset,
   });
 
   final double size;
   final ImageProvider image;
   final Color background;
+  final String? videoAsset;
+
+  @override
+  State<_HeroCircle> createState() => _HeroCircleState();
+}
+
+class _HeroCircleState extends State<_HeroCircle> {
+  VideoPlayerController? _controller;
+  bool _ready = false;
+  bool _playing = false;
+
+  bool get _hasVideo => widget.videoAsset != null;
+
+  @override
+  void initState() {
+    super.initState();
+    _prepareVideo();
+  }
+
+  @override
+  void didUpdateWidget(covariant _HeroCircle oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.videoAsset != widget.videoAsset) {
+      _disposeController();
+      _prepareVideo();
+    }
+  }
+
+  Future<void> _prepareVideo() async {
+    final asset = widget.videoAsset;
+    if (asset == null) return;
+
+    final controller = VideoPlayerController.asset(asset);
+    try {
+      await controller.initialize();
+      await controller.setLooping(true);
+      if (!mounted) {
+        await controller.dispose();
+        return;
+      }
+      controller.addListener(_onVideoTick);
+      setState(() {
+        _controller = controller;
+        _ready = true;
+      });
+    } catch (_) {
+      await controller.dispose();
+    }
+  }
+
+  void _onVideoTick() {
+    final controller = _controller;
+    if (controller == null || !mounted) return;
+    final isPlaying = controller.value.isPlaying;
+    if (isPlaying != _playing) {
+      setState(() => _playing = isPlaying);
+    }
+  }
+
+  Future<void> _togglePlayback() async {
+    final controller = _controller;
+    if (controller == null || !_ready) return;
+
+    if (controller.value.isPlaying) {
+      await controller.pause();
+      await controller.seekTo(Duration.zero);
+      if (mounted) setState(() => _playing = false);
+    } else {
+      await controller.play();
+      if (mounted) setState(() => _playing = true);
+    }
+  }
+
+  void _disposeController() {
+    _controller?.removeListener(_onVideoTick);
+    _controller?.dispose();
+    _controller = null;
+    _ready = false;
+    _playing = false;
+  }
+
+  @override
+  void dispose() {
+    _disposeController();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
+    final size = widget.size;
     final badgeSize = (size * 0.24).clamp(40.0, 56.0);
+    final showPlayBadge = _hasVideo && _ready;
 
     return SizedBox(
       width: size + 12,
@@ -267,17 +363,11 @@ class _HeroCircle extends StatelessWidget {
               ),
               child: Container(
                 decoration: BoxDecoration(
-                  color: background,
+                  color: widget.background,
                   shape: BoxShape.circle,
                 ),
                 clipBehavior: Clip.antiAlias,
-                child: Image(
-                  image: image,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) => const Center(
-                    child: Icon(Icons.image_not_supported_outlined, size: 40),
-                  ),
-                ),
+                child: _buildMedia(),
               ),
             ),
           ),
@@ -300,38 +390,74 @@ class _HeroCircle extends StatelessWidget {
               color: SignStepsView._purple.withValues(alpha: 0.5),
             ),
           ),
-          // Purple badge, bottom-right.
-          Positioned(
-            bottom: 4,
-            right: 4,
-            child: Container(
-              width: badgeSize,
-              height: badgeSize,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [SignStepsView._purple, SignStepsView._purpleDeep],
-                ),
-                shape: BoxShape.circle,
-                border: Border.all(color: Colors.white, width: 3),
-                boxShadow: [
-                  BoxShadow(
-                    color: SignStepsView._purpleDeep.withValues(alpha: 0.4),
-                    blurRadius: 10,
-                    offset: const Offset(0, 4),
+          if (showPlayBadge)
+            Positioned(
+              bottom: 4,
+              right: 4,
+              child: Material(
+                color: Colors.transparent,
+                shape: const CircleBorder(),
+                child: InkWell(
+                  customBorder: const CircleBorder(),
+                  onTap: _togglePlayback,
+                  child: Container(
+                    width: badgeSize,
+                    height: badgeSize,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          SignStepsView._purple,
+                          SignStepsView._purpleDeep,
+                        ],
+                      ),
+                      shape: BoxShape.circle,
+                      border: Border.all(color: Colors.white, width: 3),
+                      boxShadow: [
+                        BoxShadow(
+                          color: SignStepsView._purpleDeep.withValues(
+                            alpha: 0.4,
+                          ),
+                          blurRadius: 10,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: Icon(
+                      _playing ? Icons.pause_rounded : Icons.play_arrow_rounded,
+                      color: Colors.white,
+                      size: badgeSize * 0.5,
+                    ),
                   ),
-                ],
-              ),
-              child: Icon(
-                Icons.front_hand_rounded,
-                color: Colors.white,
-                size: badgeSize * 0.5,
+                ),
               ),
             ),
-          ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildMedia() {
+    final controller = _controller;
+    if (_playing && controller != null && controller.value.isInitialized) {
+      return FittedBox(
+        fit: BoxFit.cover,
+        clipBehavior: Clip.hardEdge,
+        child: SizedBox(
+          width: controller.value.size.width,
+          height: controller.value.size.height,
+          child: VideoPlayer(controller),
+        ),
+      );
+    }
+
+    return Image(
+      image: widget.image,
+      fit: BoxFit.cover,
+      errorBuilder: (context, error, stackTrace) => const Center(
+        child: Icon(Icons.image_not_supported_outlined, size: 40),
       ),
     );
   }
