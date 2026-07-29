@@ -500,6 +500,7 @@ class _SignStepsSection extends StatelessWidget {
       mainImage: mainImage,
       additionalStepImages: additionalImages,
       instruction: sign.instructionText,
+      videoAsset: sign.videoAsset,
     );
   }
 }
