@@ -13,6 +13,8 @@ class Sign {
     this.stepThreeImagePath,
     this.instructionOverride,
     this.subtitleLabel = 'Sign Language',
+    this.hasVideo = false,
+    this.videoPath,
   });
 
   final String id;
@@ -34,6 +36,13 @@ class Sign {
   final String? instructionOverride;
   final String subtitleLabel;
 
+  /// When true, the lesson hero shows a play control for [videoAsset].
+  /// Drop the file at the convention path and set this to true.
+  final bool hasVideo;
+
+  /// Optional override for the demo video. Defaults to [defaultVideoAsset].
+  final String? videoPath;
+
   /// Shared category-detail / preview illustration.
   String get imageAsset => 'assets/signs/$id.webp';
 
@@ -48,6 +57,14 @@ class Sign {
 
   /// Tip card copy under the step circles.
   String get instructionText => instructionOverride ?? signDescription;
+
+  /// Convention: `assets/signs/<id>/<id>_video.mp4`
+  static String defaultVideoAsset(String id) =>
+      'assets/signs/$id/${id}_video.mp4';
+
+  /// Demo video for the hero circle, or null when [hasVideo] is false.
+  String? get videoAsset =>
+      hasVideo ? (videoPath ?? defaultVideoAsset(id)) : null;
 }
 
 enum HandGestureType {

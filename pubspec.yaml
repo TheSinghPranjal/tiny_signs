@@ -16,6 +16,7 @@ dependencies:
   shared_preferences: ^2.3.3
   flutter_animate: ^4.5.2
   confetti: ^0.8.0
+  video_player: ^2.11.1
 
 dev_dependencies:
   flutter_test:
@@ -27,3 +28,35 @@ flutter:
   assets:
     - assets/signs/
     - assets/images/
+    # Per-sign folders (step images + demo videos). Add a folder here when
+    # introducing a new sign's nested assets.
+    - assets/signs/all_done/
+    - assets/signs/angry/
+    - assets/signs/brother/
+    - assets/signs/calm/
+    - assets/signs/cold/
+    - assets/signs/dad/
+    - assets/signs/down/
+    - assets/signs/drink/
+    - assets/signs/excited/
+    - assets/signs/happy/
+    - assets/signs/help/
+    - assets/signs/hot/
+    - assets/signs/hug/
+    - assets/signs/hurt/
+    - assets/signs/love/
+    - assets/signs/mom/
+    - assets/signs/more/
+    - assets/signs/no/
+    - assets/signs/please/
+    - assets/signs/pray/
+    - assets/signs/rain/
+    - assets/signs/sad/
+    - assets/signs/scared/
+    - assets/signs/sick/
+    - assets/signs/sister/
+    - assets/signs/stop/
+    - assets/signs/surprised/
+    - assets/signs/thank_you/
+    - assets/signs/up/
+    - assets/signs/yes/
