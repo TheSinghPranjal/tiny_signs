@@ -199,7 +199,6 @@ abstract final class SignRepository {
       narration: 'Yes means agree! Nod your fist up and down.',
       handGesture: HandGestureType.fistBump,
       mainImagePath: 'assets/signs/yes.webp',
-      hasVideo: true,
     ),
     const Sign(
       id: 'no',
