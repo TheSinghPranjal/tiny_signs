@@ -13,7 +13,7 @@ class Sign {
     this.stepThreeImagePath,
     this.instructionOverride,
     this.subtitleLabel = 'Sign Language',
-    this.hasVideo = false,
+    this.hasVideo = true,
     this.videoPath,
   });
 
@@ -37,7 +37,7 @@ class Sign {
   final String subtitleLabel;
 
   /// When true, the lesson hero shows a play control for [videoAsset].
-  /// Drop the file at the convention path and set this to true.
+  /// Defaults to true — replace `assets/signs/<id>/<id>_video.mp4` to update.
   final bool hasVideo;
 
   /// Optional override for the demo video. Defaults to [defaultVideoAsset].
